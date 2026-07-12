@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* Style Tokens & Themes */
+:root,
+.light-theme {
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-display: 'Outfit', var(--font-sans);
+  --font-mono: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+
+  /* HSL Color System */
+  --bg-app: HSL(215, 20%, 98%); /* Slate 50 */
+  --bg-panel: HSL(0, 0%, 100%);
+  --bg-input: HSL(210, 40%, 96.1%); /* Slate 100 */
+  --border-color: HSL(214.3, 31.8%, 91.4%); /* Slate 200 */
+  
+  --text-primary: HSL(222.2, 47.4%, 11.2%); /* Slate 900 */
+  --text-secondary: HSL(215.4, 16.3%, 46.9%); /* Slate 500 */
+  --text-muted: HSL(215.4, 25%, 65%); /* Slate 400 */
+  
+  /* Accent Colors */
+  --green-primary: HSL(142.1, 76.2%, 36.3%); /* Green 600 */
+  --green-light: HSL(142.1, 76.2%, 95%);
+  --green-hover: HSL(142.1, 76.2%, 30%);
+  
+  --accent-blue: HSL(221.2, 83.2%, 53.3%);
+  --accent-blue-light: HSL(221.2, 83.2%, 95%);
+  
+  --danger: HSL(346.8, 77.2%, 49.8%);
+  --danger-light: HSL(346.8, 77.2%, 95%);
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --glass-blur: 16px;
+}
+
+.dark-theme {
+  --bg-app: HSL(224, 71%, 4%); /* Zinc/Slate Darkest */
+  --bg-panel: HSL(224, 71%, 7%);
+  --bg-input: HSL(224, 71%, 12%);
+  --border-color: HSL(224, 71%, 15%);
+  
+  --text-primary: HSL(210, 40%, 98%);
+  --text-secondary: HSL(215, 20.2%, 65.1%);
+  --text-muted: HSL(215.4, 15%, 45%);
+  
+  --green-primary: HSL(142.1, 70%, 45%);
+  --green-light: HSL(142.1, 70%, 15%);
+  --green-hover: HSL(142.1, 70%, 55%);
+  
+  --accent-blue: HSL(217.2, 91.2%, 59.8%);
+  --accent-blue-light: HSL(217.2, 91.2%, 18%);
+  
+  --danger: HSL(346.8, 85%, 55%);
+  --danger-light: HSL(346.8, 85%, 15%);
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+  --glass-bg: rgba(10, 10, 12, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-blur: 20px;
+}
+
+/* Reset and Layout */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+code {
+  font-family: var(--font-mono);
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Custom Scrollbar for premium feel */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}

@@ -1,0 +1,13 @@
+{
+  "id": "vault",
+  "name": "Vault",
+  "version": "1.0.0",
+  "description": "A beautiful and secure vault plugin for storing credentials, cards, bank accounts, and secrets.",
+  "fileType": "vault",
+  "route": "/vault/:file_id",
+  "entry": "/build/index.html",
+  "icon": "build/Icons.svg",
+  "iconDark": "build/Icons-light.svg",
+  "preview": true,
+  "color": "green"
+}
