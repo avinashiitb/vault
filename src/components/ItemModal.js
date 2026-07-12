@@ -9,6 +9,100 @@ const CATEGORIES = [
   { value: "identity", label: "Identity Document" },
 ];
 
+const ViewFieldRow = ({ label, value, isSecret }) => {
+  const [revealed, setRevealed] = useState(!isSecret);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(value || "");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  if (!value && !isSecret) return null; // Don't render empty optional fields
+
+  return (
+    <div className="view-field-row" style={{
+      display: "flex",
+      flexDirection: "column",
+      gap: "6px",
+      padding: "12px 14px",
+      background: "rgba(255, 255, 255, 0.03)",
+      borderRadius: "8px",
+      border: "1px solid var(--border-color)",
+      marginBottom: "12px"
+    }}>
+      <div style={{ fontSize: "11px", color: "var(--text-secondary)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px" }}>
+        {label}
+      </div>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "10px" }}>
+        <span className="font-mono" style={{
+          fontSize: "13px",
+          color: "var(--text-primary)",
+          wordBreak: "break-all",
+          flex: 1
+        }}>
+          {isSecret && !revealed ? "••••••••••••" : value || "—"}
+        </span>
+        <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
+          {isSecret && (
+            <button
+              type="button"
+              className="action-icon-btn"
+              onClick={() => setRevealed(!revealed)}
+              style={{
+                padding: "6px",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                color: "var(--text-secondary)",
+                display: "grid",
+                placeItems: "center"
+              }}
+              title={revealed ? "Hide Value" : "Reveal Value"}
+            >
+              {revealed ? (
+                <i className="fa-solid fa-eye-slash" style={{ fontSize: "12px" }}></i>
+              ) : (
+                <i className="fa-solid fa-eye" style={{ fontSize: "12px" }}></i>
+              )}
+            </button>
+          )}
+          <button
+            type="button"
+            className="action-icon-btn"
+            onClick={handleCopy}
+            style={{
+              padding: "4px 8px",
+              background: copied ? "rgba(34, 197, 94, 0.1)" : "rgba(255, 255, 255, 0.02)",
+              border: "1px solid " + (copied ? "#22c55e" : "var(--border-color)"),
+              borderRadius: "4px",
+              cursor: "pointer",
+              color: copied ? "#22c55e" : "var(--text-secondary)",
+              fontSize: "11px",
+              display: "flex",
+              alignItems: "center",
+              gap: "4px",
+              transition: "all 0.15s ease"
+            }}
+            title="Copy to Clipboard"
+          >
+            {copied ? (
+              <>
+                <i className="fa-solid fa-check"></i> Copied
+              </>
+            ) : (
+              <>
+                <i className="fa-solid fa-copy"></i> Copy
+              </>
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const ItemModal = ({ mode, item, onSave, onClose }) => {
   const isView = mode === "view";
   const isEdit = mode === "edit" || isView;
@@ -129,7 +223,7 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
 
   return (
     <div className="modal-backdrop">
-      <div className="modal-card">
+      <div className="modal-card" style={{ maxWidth: isView ? "550px" : "480px" }}>
         <div className="modal-header">
           <h2>{isView ? "View Credentials" : isEdit ? "Edit Item" : "Add Credentials"}</h2>
           <button className="modal-close-btn" onClick={onClose}>
@@ -140,60 +234,139 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
           </button>
         </div>
 
-        <form onSubmit={handleFormSubmit}>
-          <div className="modal-body">
-            <div className="form-row">
-              <div className="form-group flex-1">
-                <label>Category</label>
-                <select
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  disabled={isEdit}
-                >
-                  {CATEGORIES.map((cat) => (
-                    <option key={cat.value} value={cat.value}>
-                      {cat.label}
-                    </option>
-                  ))}
-                </select>
+        {isView ? (
+          <div className="modal-body" style={{ maxHeight: "70vh", overflowY: "auto", padding: "20px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "20px", paddingBottom: "14px", borderBottom: "1px solid var(--border-color)" }}>
+              <div style={{
+                background: "rgba(34, 197, 94, 0.1)",
+                color: "var(--green-primary)",
+                padding: "4px 8px",
+                borderRadius: "4px",
+                fontSize: "10px",
+                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: "0.5px"
+              }}>
+                {CATEGORIES.find(c => c.value === category)?.label || category}
               </div>
-
-              <div className="form-group flex-2">
-                <label>Title</label>
-                <input
-                  type="text"
-                  placeholder={
-                    category === "website" ? "github.com" :
-                    category === "card" ? "Visa Platinum" :
-                    category === "bank" ? "HDFC Savings" :
-                    category === "apikey" ? "GitHub PAT" : "Passport"
-                  }
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  disabled={isView}
-                  required
-                  autoFocus
-                />
-              </div>
+              <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 600, color: "var(--text-primary)" }}>{title}</h3>
             </div>
 
-            {/* WEBSITE FIELDS */}
-            {category === "website" && (
-              <div className="category-fields">
-                <div className="form-group">
-                  <label>Username / Email</label>
+            <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+              {/* WEBSITE VIEW */}
+              {category === "website" && (
+                <>
+                  <ViewFieldRow label="Username / Email" value={username} />
+                  <ViewFieldRow label="Password" value={password} isSecret={true} />
+                  <ViewFieldRow label="URL" value={url} />
+                </>
+              )}
+
+              {/* CARD VIEW */}
+              {category === "card" && (
+                <>
+                  <ViewFieldRow label="Cardholder Name" value={cardholder} />
+                  <ViewFieldRow label="Card Number" value={cardNumber} isSecret={true} />
+                  <div style={{ display: "flex", gap: "12px" }}>
+                    <div style={{ flex: 1 }}><ViewFieldRow label="Expiry Date" value={cardExpiry} /></div>
+                    <div style={{ flex: 1 }}><ViewFieldRow label="CVV" value={cardCvv} isSecret={true} /></div>
+                  </div>
+                </>
+              )}
+
+              {/* BANK VIEW */}
+              {category === "bank" && (
+                <>
+                  <ViewFieldRow label="Sub Description" value={bankSub} />
+                  <ViewFieldRow label="Account Number" value={accountNumber} isSecret={true} />
+                  <div style={{ display: "flex", gap: "12px" }}>
+                    <div style={{ flex: 1 }}><ViewFieldRow label="IFSC Code" value={ifscCode} /></div>
+                    <div style={{ flex: 1 }}><ViewFieldRow label="UPI PIN" value={upiPin} isSecret={true} /></div>
+                  </div>
+                </>
+              )}
+
+              {/* API KEY VIEW */}
+              {category === "apikey" && (
+                <>
+                  <ViewFieldRow label="Client ID / Key ID / Description" value={keyScope} />
+                  <ViewFieldRow label="Client Secret / Key Value" value={apiKeyValue} isSecret={true} />
+                </>
+              )}
+
+              {/* IDENTITY VIEW */}
+              {category === "identity" && (
+                <>
+                  <ViewFieldRow label="Label / Expiry" value={idSub} />
+                  <ViewFieldRow label="ID Number" value={idNumber} isSecret={true} />
+                </>
+              )}
+
+              {/* CUSTOM FIELDS VIEW */}
+              {customFields.length > 0 && (
+                <div style={{ marginTop: "16px", paddingTop: "14px", borderTop: "1px dashed var(--border-color)" }}>
+                  <h4 style={{ margin: "0 0 12px 0", fontSize: "12px", fontWeight: 600, color: "var(--text-secondary)", textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                    Custom Fields (Encrypted)
+                  </h4>
+                  {customFields.map((field) => (
+                    <ViewFieldRow key={field.id} label={field.name} value={field.value} isSecret={true} />
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        ) : (
+          <form onSubmit={handleFormSubmit}>
+            <div className="modal-body">
+              <div className="form-row">
+                <div className="form-group flex-1">
+                  <label>Category</label>
+                  <select
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    disabled={isEdit}
+                  >
+                    {CATEGORIES.map((cat) => (
+                      <option key={cat.value} value={cat.value}>
+                        {cat.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="form-group flex-2">
+                  <label>Title</label>
                   <input
                     type="text"
-                    placeholder="dev@priya.io"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    disabled={isView}
+                    placeholder={
+                      category === "website" ? "github.com" :
+                      category === "card" ? "Visa Platinum" :
+                      category === "bank" ? "HDFC Savings" :
+                      category === "apikey" ? "GitHub PAT" : "Passport"
+                    }
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                    autoFocus
                   />
                 </div>
-                <div className="form-group relative">
-                  <div className="label-row">
-                    <label>Password</label>
-                    {!isView && (
+              </div>
+
+              {/* WEBSITE FIELDS */}
+              {category === "website" && (
+                <div className="category-fields">
+                  <div className="form-group">
+                    <label>Username / Email</label>
+                    <input
+                      type="text"
+                      placeholder="dev@priya.io"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group relative">
+                    <div className="label-row">
+                      <label>Password</label>
                       <button
                         type="button"
                         className="text-btn"
@@ -201,143 +374,130 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
                       >
                         {showGenerator ? "Hide Generator" : "Generate Password"}
                       </button>
-                    )}
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Enter password..."
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
                   </div>
-                  <input
-                    type="text"
-                    placeholder="Enter password..."
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    disabled={isView}
-                  />
+                  <div className="form-group">
+                    <label>Website URL (optional)</label>
+                    <input
+                      type="text"
+                      placeholder="https://github.com"
+                      value={url}
+                      onChange={(e) => setUrl(e.target.value)}
+                    />
+                  </div>
                 </div>
-                <div className="form-group">
-                  <label>Website URL (optional)</label>
-                  <input
-                    type="text"
-                    placeholder="https://github.com"
-                    value={url}
-                    onChange={(e) => setUrl(e.target.value)}
-                    disabled={isView}
-                  />
-                </div>
-              </div>
-            )}
+              )}
 
-            {/* CARD FIELDS */}
-            {category === "card" && (
-              <div className="category-fields">
-                <div className="form-group">
-                  <label>Cardholder Name</label>
-                  <input
-                    type="text"
-                    placeholder="Priya Sharma"
-                    value={cardholder}
-                    onChange={(e) => setCardholder(e.target.value)}
-                    disabled={isView}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Card Number</label>
-                  <input
-                    type="text"
-                    placeholder="4242 4242 4242 4242"
-                    value={cardNumber}
-                    onChange={(e) => setCardNumber(e.target.value)}
-                    disabled={isView}
-                  />
-                </div>
-                <div className="form-row">
-                  <div className="form-group flex-1">
-                    <label>Expiration Date</label>
+              {/* CARD FIELDS */}
+              {category === "card" && (
+                <div className="category-fields">
+                  <div className="form-group">
+                    <label>Cardholder Name</label>
                     <input
                       type="text"
-                      placeholder="MM/YY"
-                      value={cardExpiry}
-                      onChange={(e) => setCardExpiry(e.target.value)}
-                      disabled={isView}
+                      placeholder="Priya Sharma"
+                      value={cardholder}
+                      onChange={(e) => setCardholder(e.target.value)}
                     />
                   </div>
-                  <div className="form-group flex-1">
-                    <label>CVV</label>
+                  <div className="form-group">
+                    <label>Card Number</label>
                     <input
                       type="text"
-                      placeholder="•••"
-                      maxLength="4"
-                      value={cardCvv}
-                      onChange={(e) => setCardCvv(e.target.value)}
-                      disabled={isView}
+                      placeholder="4242 4242 4242 4242"
+                      value={cardNumber}
+                      onChange={(e) => setCardNumber(e.target.value)}
                     />
                   </div>
+                  <div className="form-row">
+                    <div className="form-group flex-1">
+                      <label>Expiration Date</label>
+                      <input
+                        type="text"
+                        placeholder="MM/YY"
+                        value={cardExpiry}
+                        onChange={(e) => setCardExpiry(e.target.value)}
+                      />
+                    </div>
+                    <div className="form-group flex-1">
+                      <label>CVV</label>
+                      <input
+                        type="text"
+                        placeholder="•••"
+                        maxLength="4"
+                        value={cardCvv}
+                        onChange={(e) => setCardCvv(e.target.value)}
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* BANK FIELDS */}
-            {category === "bank" && (
-              <div className="category-fields">
-                <div className="form-group">
-                  <label>Sub Description (e.g. Primary Account)</label>
-                  <input
-                    type="text"
-                    placeholder="Primary account"
-                    value={bankSub}
-                    onChange={(e) => setBankSub(e.target.value)}
-                    disabled={isView}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Account Number</label>
-                  <input
-                    type="text"
-                    placeholder="A/C ······6641"
-                    value={accountNumber}
-                    onChange={(e) => setAccountNumber(e.target.value)}
-                    disabled={isView}
-                  />
-                </div>
-                <div className="form-row">
-                  <div className="form-group flex-1">
-                    <label>IFSC Code</label>
+              {/* BANK FIELDS */}
+              {category === "bank" && (
+                <div className="category-fields">
+                  <div className="form-group">
+                    <label>Sub Description (e.g. Primary Account)</label>
                     <input
                       type="text"
-                      placeholder="HDFC000••••"
-                      value={ifscCode}
-                      onChange={(e) => setIfscCode(e.target.value)}
-                      disabled={isView}
+                      placeholder="Primary account"
+                      value={bankSub}
+                      onChange={(e) => setBankSub(e.target.value)}
                     />
                   </div>
-                  <div className="form-group flex-1">
-                    <label>UPI PIN</label>
+                  <div className="form-group">
+                    <label>Account Number</label>
                     <input
                       type="text"
-                      placeholder="••••"
-                      value={upiPin}
-                      onChange={(e) => setUpiPin(e.target.value)}
-                      disabled={isView}
+                      placeholder="A/C ······6641"
+                      value={accountNumber}
+                      onChange={(e) => setAccountNumber(e.target.value)}
                     />
                   </div>
+                  <div className="form-row">
+                    <div className="form-group flex-1">
+                      <label>IFSC Code</label>
+                      <input
+                        type="text"
+                        placeholder="HDFC000••••"
+                        value={ifscCode}
+                        onChange={(e) => setIfscCode(e.target.value)}
+                      />
+                    </div>
+                    <div className="form-group flex-1">
+                      <label>UPI PIN</label>
+                      <input
+                        type="text"
+                        placeholder="••••"
+                        value={upiPin}
+                        onChange={(e) => setUpiPin(e.target.value)}
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* API KEY FIELDS */}
-            {category === "apikey" && (
-              <div className="category-fields">
-                <div className="form-group">
-                  <label>Client ID / Key ID / Description</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Client ID, Access Key ID, or Description"
-                    value={keyScope}
-                    onChange={(e) => setKeyScope(e.target.value)}
-                    disabled={isView}
-                  />
-                </div>
-                <div className="form-group">
-                  <div className="label-row">
-                    <label>Client Secret / Key Value</label>
-                    {!isView && (
+              {/* API KEY FIELDS */}
+              {category === "apikey" && (
+                <div className="category-fields">
+                  <div className="form-group">
+                    <label>Client ID / Key ID / Description</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Client ID, Access Key ID, or Description"
+                      value={keyScope}
+                      onChange={(e) => setKeyScope(e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <div className="label-row">
+                      <label>Client Secret / Key Value</label>
                       <button
                         type="button"
                         className="text-btn"
@@ -345,117 +505,112 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
                       >
                         {showGenerator ? "Hide Generator" : "Generate Secure Key"}
                       </button>
-                    )}
-                  </div>
-                  <input
-                    type="text"
-                    placeholder="e.g. Client Secret or Secret Key Value"
-                    value={apiKeyValue}
-                    onChange={(e) => setApiKeyValue(e.target.value)}
-                    disabled={isView}
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* IDENTITY FIELDS */}
-            {category === "identity" && (
-              <div className="category-fields">
-                <div className="form-group">
-                  <label>Label / Expiry (e.g. Expires 2031, Govt ID)</label>
-                  <input
-                    type="text"
-                    placeholder="Expires 2031"
-                    value={idSub}
-                    onChange={(e) => setIdSub(e.target.value)}
-                    disabled={isView}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>ID Number</label>
-                  <input
-                    type="text"
-                    placeholder="Z••••••93"
-                    value={idNumber}
-                    onChange={(e) => setIdNumber(e.target.value)}
-                    disabled={isView}
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* PASSWORD GENERATOR DRAWER */}
-            {showGenerator && !isView && (
-              <div className="password-generator-panel">
-                <div className="generator-header">
-                  <span className="generator-title">Secure Generator</span>
-                </div>
-                <div className="generated-output-box">
-                  <span className="generated-pass-text">{generatedPassword}</span>
-                  <button
-                    type="button"
-                    className="btn-use-password"
-                    onClick={handleUseGenerated}
-                  >
-                    Use Value
-                  </button>
-                </div>
-                <div className="generator-controls">
-                  <div className="gen-slider-group">
-                    <label>Length: {genLength}</label>
+                    </div>
                     <input
-                      type="range"
-                      min="6"
-                      max="32"
-                      value={genLength}
-                      onChange={(e) => setGenLength(parseInt(e.target.value))}
+                      type="text"
+                      placeholder="e.g. Client Secret or Secret Key Value"
+                      value={apiKeyValue}
+                      onChange={(e) => setApiKeyValue(e.target.value)}
                     />
                   </div>
-                  <div className="gen-options-grid">
-                    <label className="checkbox-label">
-                      <input
-                        type="checkbox"
-                        checked={genUpper}
-                        onChange={(e) => setGenUpper(e.target.checked)}
-                      />
-                      A-Z
-                    </label>
-                    <label className="checkbox-label">
-                      <input
-                        type="checkbox"
-                        checked={genLower}
-                        onChange={(e) => setGenLower(e.target.checked)}
-                      />
-                      a-z
-                    </label>
-                    <label className="checkbox-label">
-                      <input
-                        type="checkbox"
-                        checked={genNumbers}
-                        onChange={(e) => setGenNumbers(e.target.checked)}
-                      />
-                      0-9
-                    </label>
-                    <label className="checkbox-label">
-                      <input
-                        type="checkbox"
-                        checked={genSymbols}
-                        onChange={(e) => setGenSymbols(e.target.checked)}
-                      />
-                      Symbols
-                    </label>
+                </div>
+              )}
+
+              {/* IDENTITY FIELDS */}
+              {category === "identity" && (
+                <div className="category-fields">
+                  <div className="form-group">
+                    <label>Label / Expiry (e.g. Expires 2031, Govt ID)</label>
+                    <input
+                      type="text"
+                      placeholder="Expires 2031"
+                      value={idSub}
+                      onChange={(e) => setIdSub(e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>ID Number</label>
+                    <input
+                      type="text"
+                      placeholder="Z••••••93"
+                      value={idNumber}
+                      onChange={(e) => setIdNumber(e.target.value)}
+                    />
                   </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* CUSTOM FIELDS (ALL CATEGORIES) */}
-            <div className="custom-fields-section" style={{ marginTop: "20px", paddingTop: "15px", borderTop: "1px dashed var(--border-color)" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-                <h4 style={{ margin: 0, fontSize: "13px", fontWeight: 600, color: "var(--text-secondary)" }}>
-                  Custom Fields (Encrypted)
-                </h4>
-                {!isView && (
+              {/* PASSWORD GENERATOR DRAWER */}
+              {showGenerator && (
+                <div className="password-generator-panel">
+                  <div className="generator-header">
+                    <span className="generator-title">Secure Generator</span>
+                  </div>
+                  <div className="generated-output-box">
+                    <span className="generated-pass-text">{generatedPassword}</span>
+                    <button
+                      type="button"
+                      className="btn-use-password"
+                      onClick={handleUseGenerated}
+                    >
+                      Use Value
+                    </button>
+                  </div>
+                  <div className="generator-controls">
+                    <div className="gen-slider-group">
+                      <label>Length: {genLength}</label>
+                      <input
+                        type="range"
+                        min="6"
+                        max="32"
+                        value={genLength}
+                        onChange={(e) => setGenLength(parseInt(e.target.value))}
+                      />
+                    </div>
+                    <div className="gen-options-grid">
+                      <label className="checkbox-label">
+                        <input
+                          type="checkbox"
+                          checked={genUpper}
+                          onChange={(e) => setGenUpper(e.target.checked)}
+                        />
+                        A-Z
+                      </label>
+                      <label className="checkbox-label">
+                        <input
+                          type="checkbox"
+                          checked={genLower}
+                          onChange={(e) => setGenLower(e.target.checked)}
+                        />
+                        a-z
+                      </label>
+                      <label className="checkbox-label">
+                        <input
+                          type="checkbox"
+                          checked={genNumbers}
+                          onChange={(e) => setGenNumbers(e.target.checked)}
+                        />
+                        0-9
+                      </label>
+                      <label className="checkbox-label">
+                        <input
+                          type="checkbox"
+                          checked={genSymbols}
+                          onChange={(e) => setGenSymbols(e.target.checked)}
+                        />
+                        Symbols
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* CUSTOM FIELDS (ALL CATEGORIES) */}
+              <div className="custom-fields-section" style={{ marginTop: "20px", paddingTop: "15px", borderTop: "1px dashed var(--border-color)" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+                  <h4 style={{ margin: 0, fontSize: "13px", fontWeight: 600, color: "var(--text-secondary)" }}>
+                    Custom Fields (Encrypted)
+                  </h4>
                   <button
                     type="button"
                     className="text-btn"
@@ -464,36 +619,32 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
                   >
                     <i className="fa-solid fa-plus"></i> Add Field
                   </button>
-                )}
-              </div>
+                </div>
 
-              {customFields.length === 0 ? (
-                <p style={{ margin: 0, fontSize: "11px", color: "var(--text-secondary)", fontStyle: "italic" }}>
-                  No custom fields added yet.
-                </p>
-              ) : (
-                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                  {customFields.map((field) => (
-                    <div key={field.id} style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-                      <input
-                        type="text"
-                        placeholder="Field Name (e.g. Netbanking Password)"
-                        value={field.name}
-                        onChange={(e) => handleCustomFieldChange(field.id, "name", e.target.value)}
-                        style={{ flex: 1, padding: "8px 12px", fontSize: "12px" }}
-                        disabled={isView}
-                        required
-                      />
-                      <input
-                        type="text"
-                        placeholder="Field Value"
-                        value={field.value}
-                        onChange={(e) => handleCustomFieldChange(field.id, "value", e.target.value)}
-                        style={{ flex: 2, padding: "8px 12px", fontSize: "12px" }}
-                        disabled={isView}
-                        required
-                      />
-                      {!isView && (
+                {customFields.length === 0 ? (
+                  <p style={{ margin: 0, fontSize: "11px", color: "var(--text-secondary)", fontStyle: "italic" }}>
+                    No custom fields added yet.
+                  </p>
+                ) : (
+                  <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                    {customFields.map((field) => (
+                      <div key={field.id} style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                        <input
+                          type="text"
+                          placeholder="Field Name (e.g. Netbanking Password)"
+                          value={field.name}
+                          onChange={(e) => handleCustomFieldChange(field.id, "name", e.target.value)}
+                          style={{ flex: 1, padding: "8px 12px", fontSize: "12px" }}
+                          required
+                        />
+                        <input
+                          type="text"
+                          placeholder="Field Value"
+                          value={field.value}
+                          onChange={(e) => handleCustomFieldChange(field.id, "value", e.target.value)}
+                          style={{ flex: 2, padding: "8px 12px", fontSize: "12px" }}
+                          required
+                        />
                         <button
                           type="button"
                           onClick={() => handleRemoveCustomField(field.id)}
@@ -512,31 +663,31 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
                         >
                           <i className="fa-solid fa-trash" style={{ fontSize: "11px" }}></i>
                         </button>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
+          </form>
+        )}
 
-          <div className="modal-footer">
-            {isView ? (
-              <button type="button" className="btn-save" onClick={onClose} style={{ width: "100%" }}>
-                Close
+        <div className="modal-footer">
+          {isView ? (
+            <button type="button" className="btn-save" onClick={onClose} style={{ width: "100%" }}>
+              Close
+            </button>
+          ) : (
+            <>
+              <button type="button" className="btn-cancel" onClick={onClose}>
+                Cancel
               </button>
-            ) : (
-              <>
-                <button type="button" className="btn-cancel" onClick={onClose}>
-                  Cancel
-                </button>
-                <button type="submit" className="btn-save">
-                  Save Item
-                </button>
-              </>
-            )}
-          </div>
-        </form>
+              <button type="submit" className="btn-save">
+                Save Item
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
