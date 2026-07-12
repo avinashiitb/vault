@@ -9,8 +9,9 @@ const CATEGORIES = [
   { value: "identity", label: "Identity Document" },
 ];
 
-const ItemModal = ({ item, onSave, onClose }) => {
-  const isEdit = !!item;
+const ItemModal = ({ mode, item, onSave, onClose }) => {
+  const isView = mode === "view";
+  const isEdit = mode === "edit" || isView;
   const [category, setCategory] = useState(item?.category || "website");
   const [title, setTitle] = useState(item?.title || "");
 
@@ -99,6 +100,7 @@ const ItemModal = ({ item, onSave, onClose }) => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
+    if (isView) return; // Prevent any saves in view mode
     if (!title.trim()) return;
 
     let fields = {};
@@ -129,7 +131,7 @@ const ItemModal = ({ item, onSave, onClose }) => {
     <div className="modal-backdrop">
       <div className="modal-card">
         <div className="modal-header">
-          <h2>{isEdit ? "Edit Item" : "Add Credentials"}</h2>
+          <h2>{isView ? "View Credentials" : isEdit ? "Edit Item" : "Add Credentials"}</h2>
           <button className="modal-close-btn" onClick={onClose}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -168,6 +170,7 @@ const ItemModal = ({ item, onSave, onClose }) => {
                   }
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
+                  disabled={isView}
                   required
                   autoFocus
                 />
@@ -184,24 +187,28 @@ const ItemModal = ({ item, onSave, onClose }) => {
                     placeholder="dev@priya.io"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
+                    disabled={isView}
                   />
                 </div>
                 <div className="form-group relative">
                   <div className="label-row">
                     <label>Password</label>
-                    <button
-                      type="button"
-                      className="text-btn"
-                      onClick={() => setShowGenerator(!showGenerator)}
-                    >
-                      {showGenerator ? "Hide Generator" : "Generate Password"}
-                    </button>
+                    {!isView && (
+                      <button
+                        type="button"
+                        className="text-btn"
+                        onClick={() => setShowGenerator(!showGenerator)}
+                      >
+                        {showGenerator ? "Hide Generator" : "Generate Password"}
+                      </button>
+                    )}
                   </div>
                   <input
                     type="text"
                     placeholder="Enter password..."
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    disabled={isView}
                   />
                 </div>
                 <div className="form-group">
@@ -211,6 +218,7 @@ const ItemModal = ({ item, onSave, onClose }) => {
                     placeholder="https://github.com"
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
+                    disabled={isView}
                   />
                 </div>
               </div>
@@ -226,6 +234,7 @@ const ItemModal = ({ item, onSave, onClose }) => {
                     placeholder="Priya Sharma"
                     value={cardholder}
                     onChange={(e) => setCardholder(e.target.value)}
+                    disabled={isView}
                   />
                 </div>
                 <div className="form-group">
@@ -235,6 +244,7 @@ const ItemModal = ({ item, onSave, onClose }) => {
                     placeholder="4242 4242 4242 4242"
                     value={cardNumber}
                     onChange={(e) => setCardNumber(e.target.value)}
+                    disabled={isView}
                   />
                 </div>
                 <div className="form-row">
@@ -245,6 +255,7 @@ const ItemModal = ({ item, onSave, onClose }) => {
                       placeholder="MM/YY"
                       value={cardExpiry}
                       onChange={(e) => setCardExpiry(e.target.value)}
+                      disabled={isView}
                     />
                   </div>
                   <div className="form-group flex-1">
@@ -255,6 +266,7 @@ const ItemModal = ({ item, onSave, onClose }) => {
                       maxLength="4"
                       value={cardCvv}
                       onChange={(e) => setCardCvv(e.target.value)}
+                      disabled={isView}
                     />
                   </div>
                 </div>
@@ -271,6 +283,7 @@ const ItemModal = ({ item, onSave, onClose }) => {
                     placeholder="Primary account"
                     value={bankSub}
                     onChange={(e) => setBankSub(e.target.value)}
+                    disabled={isView}
                   />
                 </div>
                 <div className="form-group">
@@ -280,6 +293,7 @@ const ItemModal = ({ item, onSave, onClose }) => {
                     placeholder="A/C ······6641"
                     value={accountNumber}
                     onChange={(e) => setAccountNumber(e.target.value)}
+                    disabled={isView}
                   />
                 </div>
                 <div className="form-row">
@@ -290,6 +304,7 @@ const ItemModal = ({ item, onSave, onClose }) => {
                       placeholder="HDFC000••••"
                       value={ifscCode}
                       onChange={(e) => setIfscCode(e.target.value)}
+                      disabled={isView}
                     />
                   </div>
                   <div className="form-group flex-1">
@@ -299,6 +314,7 @@ const ItemModal = ({ item, onSave, onClose }) => {
                       placeholder="••••"
                       value={upiPin}
                       onChange={(e) => setUpiPin(e.target.value)}
+                      disabled={isView}
                     />
                   </div>
                 </div>
@@ -315,24 +331,28 @@ const ItemModal = ({ item, onSave, onClose }) => {
                     placeholder="e.g. Client ID, Access Key ID, or Description"
                     value={keyScope}
                     onChange={(e) => setKeyScope(e.target.value)}
+                    disabled={isView}
                   />
                 </div>
                 <div className="form-group">
                   <div className="label-row">
                     <label>Client Secret / Key Value</label>
-                    <button
-                      type="button"
-                      className="text-btn"
-                      onClick={() => setShowGenerator(!showGenerator)}
-                    >
-                      {showGenerator ? "Hide Generator" : "Generate Secure Key"}
-                    </button>
+                    {!isView && (
+                      <button
+                        type="button"
+                        className="text-btn"
+                        onClick={() => setShowGenerator(!showGenerator)}
+                      >
+                        {showGenerator ? "Hide Generator" : "Generate Secure Key"}
+                      </button>
+                    )}
                   </div>
                   <input
                     type="text"
                     placeholder="e.g. Client Secret or Secret Key Value"
                     value={apiKeyValue}
                     onChange={(e) => setApiKeyValue(e.target.value)}
+                    disabled={isView}
                   />
                 </div>
               </div>
@@ -348,6 +368,7 @@ const ItemModal = ({ item, onSave, onClose }) => {
                     placeholder="Expires 2031"
                     value={idSub}
                     onChange={(e) => setIdSub(e.target.value)}
+                    disabled={isView}
                   />
                 </div>
                 <div className="form-group">
@@ -357,13 +378,14 @@ const ItemModal = ({ item, onSave, onClose }) => {
                     placeholder="Z••••••93"
                     value={idNumber}
                     onChange={(e) => setIdNumber(e.target.value)}
+                    disabled={isView}
                   />
                 </div>
               </div>
             )}
 
             {/* PASSWORD GENERATOR DRAWER */}
-            {showGenerator && (
+            {showGenerator && !isView && (
               <div className="password-generator-panel">
                 <div className="generator-header">
                   <span className="generator-title">Secure Generator</span>
@@ -433,14 +455,16 @@ const ItemModal = ({ item, onSave, onClose }) => {
                 <h4 style={{ margin: 0, fontSize: "13px", fontWeight: 600, color: "var(--text-secondary)" }}>
                   Custom Fields (Encrypted)
                 </h4>
-                <button
-                  type="button"
-                  className="text-btn"
-                  onClick={handleAddCustomField}
-                  style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "12px" }}
-                >
-                  <i className="fa-solid fa-plus"></i> Add Field
-                </button>
+                {!isView && (
+                  <button
+                    type="button"
+                    className="text-btn"
+                    onClick={handleAddCustomField}
+                    style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "12px" }}
+                  >
+                    <i className="fa-solid fa-plus"></i> Add Field
+                  </button>
+                )}
               </div>
 
               {customFields.length === 0 ? (
@@ -457,6 +481,7 @@ const ItemModal = ({ item, onSave, onClose }) => {
                         value={field.name}
                         onChange={(e) => handleCustomFieldChange(field.id, "name", e.target.value)}
                         style={{ flex: 1, padding: "8px 12px", fontSize: "12px" }}
+                        disabled={isView}
                         required
                       />
                       <input
@@ -465,26 +490,29 @@ const ItemModal = ({ item, onSave, onClose }) => {
                         value={field.value}
                         onChange={(e) => handleCustomFieldChange(field.id, "value", e.target.value)}
                         style={{ flex: 2, padding: "8px 12px", fontSize: "12px" }}
+                        disabled={isView}
                         required
                       />
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveCustomField(field.id)}
-                        style={{
-                          background: "rgba(239, 68, 68, 0.1)",
-                          color: "#ef4444",
-                          border: "none",
-                          borderRadius: "4px",
-                          width: "28px",
-                          height: "28px",
-                          cursor: "pointer",
-                          display: "grid",
-                          placeItems: "center"
-                        }}
-                        title="Remove Field"
-                      >
-                        <i className="fa-solid fa-trash" style={{ fontSize: "11px" }}></i>
-                      </button>
+                      {!isView && (
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveCustomField(field.id)}
+                          style={{
+                            background: "rgba(239, 68, 68, 0.1)",
+                            color: "#ef4444",
+                            border: "none",
+                            borderRadius: "4px",
+                            width: "28px",
+                            height: "28px",
+                            cursor: "pointer",
+                            display: "grid",
+                            placeItems: "center"
+                          }}
+                          title="Remove Field"
+                        >
+                          <i className="fa-solid fa-trash" style={{ fontSize: "11px" }}></i>
+                        </button>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -493,12 +521,20 @@ const ItemModal = ({ item, onSave, onClose }) => {
           </div>
 
           <div className="modal-footer">
-            <button type="button" className="btn-cancel" onClick={onClose}>
-              Cancel
-            </button>
-            <button type="submit" className="btn-save">
-              Save Item
-            </button>
+            {isView ? (
+              <button type="button" className="btn-save" onClick={onClose} style={{ width: "100%" }}>
+                Close
+              </button>
+            ) : (
+              <>
+                <button type="button" className="btn-cancel" onClick={onClose}>
+                  Cancel
+                </button>
+                <button type="submit" className="btn-save">
+                  Save Item
+                </button>
+              </>
+            )}
           </div>
         </form>
       </div>

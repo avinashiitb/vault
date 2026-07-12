@@ -504,6 +504,71 @@ function App() {
     });
   };
 
+  // Just-in-time decryption for viewing an item in read-only mode
+  const handleViewClick = async (item) => {
+    const decryptedFields = { ...item.fields };
+    
+    const sensitiveFieldsMap = {
+      website: ["password"],
+      card: ["cardNumber", "cardExpiry", "cardCvv"],
+      bank: ["accountNumber", "ifscCode", "upiPin"],
+      apikey: ["apiKeyValue"],
+      identity: ["idNumber"],
+    };
+
+    const sensitives = sensitiveFieldsMap[item.category] || [];
+    for (const key of Object.keys(item.fields)) {
+      if (sensitives.includes(key)) {
+        const cipher = item.fields[key];
+        if (cipher) {
+          try {
+            decryptedFields[key] = await decryptText(cipher, rawPassword);
+          } catch (e) {
+            decryptedFields[key] = "";
+          }
+        }
+      }
+    }
+
+    // Decrypt custom fields for viewing
+    if (item.fields.customFields) {
+      const decryptedCustomFields = [];
+      for (const field of item.fields.customFields) {
+        if (field.value) {
+          try {
+            const dec = await decryptText(field.value, rawPassword);
+            decryptedCustomFields.push({
+              id: field.id,
+              name: field.name,
+              value: dec
+            });
+          } catch (e) {
+            decryptedCustomFields.push({
+              id: field.id,
+              name: field.name,
+              value: ""
+            });
+          }
+        } else {
+          decryptedCustomFields.push({
+            id: field.id,
+            name: field.name,
+            value: ""
+          });
+        }
+      }
+      decryptedFields.customFields = decryptedCustomFields;
+    }
+
+    setModalState({
+      type: "view",
+      item: {
+        ...item,
+        fields: decryptedFields
+      }
+    });
+  };
+
   // 7. Add / Edit Save Item callback
   const handleSaveItem = async (modalData) => {
     const isNew = !modalData.id;
@@ -702,6 +767,7 @@ function App() {
         items={encryptedItems}
         onAddItem={() => setModalState({ type: "add" })}
         onEditItem={handleEditClick}
+        onViewItem={handleViewClick}
         onDeleteItem={handleDeleteItem}
         onLock={handleLock}
         onCopyText={handleCopyText}

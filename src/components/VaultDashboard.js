@@ -5,6 +5,7 @@ const VaultDashboard = ({
   items,
   onAddItem,
   onEditItem,
+  onViewItem,
   onDeleteItem,
   onLock,
   onCopyText,
@@ -432,22 +433,14 @@ const VaultDashboard = ({
 
                     <div className="item-row-actions">
                       <button
-                        className={`action-icon-btn ${isRevealed ? "active-reveal" : ""}`}
-                        onClick={() => toggleRevealMultiple(item.id, [{ key: "password", cipher: item.fields.password }])}
-                        title={isRevealed ? "Hide Password" : "Show Password"}
+                        className="action-icon-btn"
+                        onClick={() => onViewItem(item)}
+                        title="View Details"
                       >
-                        {isRevealed ? (
-                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"></path>
-                            <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"></path>
-                            <line x1="1" y1="1" x2="23" y2="23"></line>
-                          </svg>
-                        ) : (
-                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                            <circle cx="12" cy="12" r="3"></circle>
-                          </svg>
-                        )}
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                          <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
                       </button>
                       <button
                         className="action-icon-btn"
@@ -523,26 +516,14 @@ const VaultDashboard = ({
 
                     <div className="item-row-actions">
                       <button
-                        className={`action-icon-btn ${isRevealed ? "active-reveal" : ""}`}
-                        onClick={() => toggleRevealMultiple(item.id, [
-                          { key: "cardNumber", cipher: item.fields.cardNumber },
-                          { key: "cardExpiry", cipher: item.fields.cardExpiry },
-                          { key: "cardCvv", cipher: item.fields.cardCvv }
-                        ])}
-                        title={isRevealed ? "Hide Card Details" : "Show Card Details"}
+                        className="action-icon-btn"
+                        onClick={() => onViewItem(item)}
+                        title="View Details"
                       >
-                        {isRevealed ? (
-                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"></path>
-                            <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"></path>
-                            <line x1="1" y1="1" x2="23" y2="23"></line>
-                          </svg>
-                        ) : (
-                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                            <circle cx="12" cy="12" r="3"></circle>
-                          </svg>
-                        )}
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                          <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
                       </button>
                       <button
                         className="action-icon-btn"
@@ -620,26 +601,14 @@ const VaultDashboard = ({
 
                     <div className="item-row-actions">
                       <button
-                        className={`action-icon-btn ${isRevealed ? "active-reveal" : ""}`}
-                        onClick={() => toggleRevealMultiple(item.id, [
-                          { key: "accountNumber", cipher: item.fields.accountNumber },
-                          { key: "ifscCode", cipher: item.fields.ifscCode },
-                          { key: "upiPin", cipher: item.fields.upiPin }
-                        ])}
-                        title={isRevealed ? "Hide Account PIN" : "Show Account PIN"}
+                        className="action-icon-btn"
+                        onClick={() => onViewItem(item)}
+                        title="View Details"
                       >
-                        {isRevealed ? (
-                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"></path>
-                            <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"></path>
-                            <line x1="1" y1="1" x2="23" y2="23"></line>
-                          </svg>
-                        ) : (
-                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                            <circle cx="12" cy="12" r="3"></circle>
-                          </svg>
-                        )}
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                          <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
                       </button>
                       <button
                         className="action-icon-btn"
@@ -696,6 +665,17 @@ const VaultDashboard = ({
                     </div>
 
                     <div className="item-row-actions">
+                      <button
+                        className="action-icon-btn"
+                        onClick={() => onViewItem(item)}
+                        title="View Details"
+                        style={{ marginRight: "6px" }}
+                      >
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                          <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                      </button>
                       <button
                         className="action-icon-btn"
                         onClick={(e) => handleCopy(e, item.fields.apiKeyValue, "API Key")}
@@ -761,22 +741,14 @@ const VaultDashboard = ({
 
                       <div className="item-row-actions">
                         <button
-                          className={`action-icon-btn ${isRevealed ? "active-reveal" : ""}`}
-                          onClick={() => toggleRevealMultiple(item.id, [{ key: "idNumber", cipher: item.fields.idNumber }])}
-                          title={isRevealed ? "Hide ID" : "Show ID"}
+                          className="action-icon-btn"
+                          onClick={() => onViewItem(item)}
+                          title="View Details"
                         >
-                          {isRevealed ? (
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"></path>
-                              <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"></path>
-                              <line x1="1" y1="1" x2="23" y2="23"></line>
-                            </svg>
-                          ) : (
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                              <circle cx="12" cy="12" r="3"></circle>
-                            </svg>
-                          )}
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                          </svg>
                         </button>
                         <button
                           className="action-icon-btn"
