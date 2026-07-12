@@ -669,25 +669,16 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
                 )}
               </div>
             </div>
-          </form>
-        )}
-
-        <div className="modal-footer">
-          {isView ? (
-            <button type="button" className="btn-save" onClick={onClose} style={{ width: "100%" }}>
-              Close
-            </button>
-          ) : (
-            <>
+            <div className="modal-footer">
               <button type="button" className="btn-cancel" onClick={onClose}>
                 Cancel
               </button>
               <button type="submit" className="btn-save">
                 Save Item
               </button>
-            </>
-          )}
-        </div>
+            </div>
+          </form>
+        )}
       </div>
     </div>
   );
