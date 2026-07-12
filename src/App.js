@@ -782,6 +782,7 @@ function App() {
 
       {modalState && (
         <ItemModal
+          mode={modalState.type}
           item={modalState.item}
           onSave={handleSaveItem}
           onClose={() => setModalState(null)}
