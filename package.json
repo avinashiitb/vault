@@ -16,6 +16,9 @@
   "scripts": {
     "start": "craco start",
     "build": "craco build",
+    "package": "mkdir -p release && zip -r release/vault-$npm_package_version.zip manifest.json build/",
+    "publish": "gh release create v$npm_package_version release/vault-$npm_package_version.zip --title v$npm_package_version --notes 'Release v$npm_package_version'",
+    "release": "npm run build && npm run package && npm run publish",
     "test": "craco test",
     "eject": "react-scripts eject"
   },
