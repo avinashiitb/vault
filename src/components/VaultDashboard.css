@@ -178,6 +178,7 @@
 .item-row {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 14px;
   padding: 11px 16px;
   border-top: 1px solid var(--border-color);

@@ -159,6 +159,80 @@ const VaultDashboard = ({
     return "••••••••";
   };
 
+  // Render Custom Fields block for dynamic credentials
+  const renderCustomFieldsSection = (item) => {
+    if (!item.fields || !item.fields.customFields || item.fields.customFields.length === 0) return null;
+    
+    return (
+      <div className="item-custom-fields-panel" style={{
+        flex: "0 0 100%",
+        marginLeft: "44px",
+        padding: "8px 12px",
+        background: "rgba(255, 255, 255, 0.02)",
+        borderRadius: "6px",
+        borderLeft: "2.5px solid var(--green-primary)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "8px",
+        marginTop: "8px",
+        boxSizing: "border-box"
+      }}>
+        {item.fields.customFields.map((cf) => {
+          const isRevealed = revealedSecrets[item.id]?.[`custom-${cf.id}`] !== undefined;
+          const countdown = revealedCountdowns[`${item.id}_custom-${cf.id}`] || 0;
+          
+          return (
+            <div key={cf.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: "12px" }}>
+              <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                <span style={{ color: "var(--text-secondary)", fontWeight: 500 }}>{cf.name}:</span>
+                <span className="font-mono" style={{ color: "var(--text-primary)" }}>
+                  {renderSecret(item.id, `custom-${cf.id}`, cf.value)}
+                </span>
+                {isRevealed && (
+                  <span style={{ fontSize: "10px", color: "var(--text-secondary)", opacity: 0.8, marginLeft: "4px" }}>
+                    ({countdown}s)
+                  </span>
+                )}
+              </div>
+              <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                <button
+                  className="action-icon-btn"
+                  style={{ padding: "2px", background: "none", border: "none", cursor: "pointer", color: "var(--text-secondary)" }}
+                  onClick={() => toggleRevealMultiple(item.id, [{ key: `custom-${cf.id}`, cipher: cf.value }])}
+                  title="Toggle Reveal"
+                >
+                  {isRevealed ? (
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"></path>
+                      <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"></path>
+                      <line x1="1" y1="1" x2="23" y2="23"></line>
+                    </svg>
+                  ) : (
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                  )}
+                </button>
+                <button
+                  className="action-icon-btn"
+                  style={{ padding: "2px", background: "none", border: "none", cursor: "pointer", color: "var(--text-secondary)" }}
+                  onClick={(e) => handleCopy(e, cf.value, cf.name)}
+                  title={`Copy ${cf.name}`}
+                >
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
   // Filter items based on search query
   const filteredItems = items.filter((item) => {
     const query = searchQuery.toLowerCase().trim();
@@ -386,6 +460,7 @@ const VaultDashboard = ({
                         </svg>
                       </button>
                     </div>
+                    {renderCustomFieldsSection(item)}
                   </div>
                 );
               })}
@@ -480,6 +555,7 @@ const VaultDashboard = ({
                         </svg>
                       </button>
                     </div>
+                    {renderCustomFieldsSection(item)}
                   </div>
                 );
               })}
@@ -576,6 +652,7 @@ const VaultDashboard = ({
                         </svg>
                       </button>
                     </div>
+                    {renderCustomFieldsSection(item)}
                   </div>
                 );
               })}
@@ -591,7 +668,7 @@ const VaultDashboard = ({
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
               </svg>
-              API keys · {apikeys.length}
+              API Keys / Credentials · {apikeys.length}
             </div>
 
             {apikeys.length > 0 && (
@@ -630,6 +707,7 @@ const VaultDashboard = ({
                         </svg>
                       </button>
                     </div>
+                    {renderCustomFieldsSection(item)}
                   </div>
                 ))}
               </div>
@@ -711,6 +789,7 @@ const VaultDashboard = ({
                           </svg>
                         </button>
                       </div>
+                      {renderCustomFieldsSection(item)}
                     </div>
                   );
                 })}

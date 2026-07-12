@@ -5,7 +5,7 @@ const CATEGORIES = [
   { value: "website", label: "Website" },
   { value: "card", label: "Payment Card" },
   { value: "bank", label: "Bank Account" },
-  { value: "apikey", label: "API Key" },
+  { value: "apikey", label: "API Key / Credentials" },
   { value: "identity", label: "Identity Document" },
 ];
 
@@ -34,6 +34,26 @@ const ItemModal = ({ item, onSave, onClose }) => {
 
   const [idSub, setIdSub] = useState(item?.fields?.idSub || "");
   const [idNumber, setIdNumber] = useState(item?.fields?.idNumber || "");
+
+  // Custom Fields states
+  const [customFields, setCustomFields] = useState(item?.fields?.customFields || []);
+
+  const handleAddCustomField = () => {
+    setCustomFields([
+      ...customFields,
+      { id: Date.now().toString(), name: "", value: "" }
+    ]);
+  };
+
+  const handleCustomFieldChange = (id, field, value) => {
+    setCustomFields(
+      customFields.map((cf) => (cf.id === id ? { ...cf, [field]: value } : cf))
+    );
+  };
+
+  const handleRemoveCustomField = (id) => {
+    setCustomFields(customFields.filter((cf) => cf.id !== id));
+  };
 
   // Password Generator states
   const [showGenerator, setShowGenerator] = useState(false);
@@ -93,6 +113,9 @@ const ItemModal = ({ item, onSave, onClose }) => {
     } else if (category === "identity") {
       fields = { idSub, idNumber };
     }
+
+    // Filter and append custom fields
+    fields.customFields = customFields.filter((cf) => cf.name.trim() !== "");
 
     onSave({
       id: item?.id, // undefined for new items
@@ -286,17 +309,17 @@ const ItemModal = ({ item, onSave, onClose }) => {
             {category === "apikey" && (
               <div className="category-fields">
                 <div className="form-group">
-                  <label>Description / Scope (e.g. repo, workflow)</label>
+                  <label>Client ID / Key ID / Description</label>
                   <input
                     type="text"
-                    placeholder="repo, workflow"
+                    placeholder="e.g. Client ID, Access Key ID, or Description"
                     value={keyScope}
                     onChange={(e) => setKeyScope(e.target.value)}
                   />
                 </div>
                 <div className="form-group">
                   <div className="label-row">
-                    <label>API Key / Token Value</label>
+                    <label>Client Secret / Key Value</label>
                     <button
                       type="button"
                       className="text-btn"
@@ -307,7 +330,7 @@ const ItemModal = ({ item, onSave, onClose }) => {
                   </div>
                   <input
                     type="text"
-                    placeholder="sk-ant-••••••••"
+                    placeholder="e.g. Client Secret or Secret Key Value"
                     value={apiKeyValue}
                     onChange={(e) => setApiKeyValue(e.target.value)}
                   />
@@ -403,6 +426,70 @@ const ItemModal = ({ item, onSave, onClose }) => {
                 </div>
               </div>
             )}
+
+            {/* CUSTOM FIELDS (ALL CATEGORIES) */}
+            <div className="custom-fields-section" style={{ marginTop: "20px", paddingTop: "15px", borderTop: "1px dashed var(--border-color)" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+                <h4 style={{ margin: 0, fontSize: "13px", fontWeight: 600, color: "var(--text-secondary)" }}>
+                  Custom Fields (Encrypted)
+                </h4>
+                <button
+                  type="button"
+                  className="text-btn"
+                  onClick={handleAddCustomField}
+                  style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "12px" }}
+                >
+                  <i className="fa-solid fa-plus"></i> Add Field
+                </button>
+              </div>
+
+              {customFields.length === 0 ? (
+                <p style={{ margin: 0, fontSize: "11px", color: "var(--text-secondary)", fontStyle: "italic" }}>
+                  No custom fields added yet.
+                </p>
+              ) : (
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                  {customFields.map((field) => (
+                    <div key={field.id} style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                      <input
+                        type="text"
+                        placeholder="Field Name (e.g. Netbanking Password)"
+                        value={field.name}
+                        onChange={(e) => handleCustomFieldChange(field.id, "name", e.target.value)}
+                        style={{ flex: 1, padding: "8px 12px", fontSize: "12px" }}
+                        required
+                      />
+                      <input
+                        type="text"
+                        placeholder="Field Value"
+                        value={field.value}
+                        onChange={(e) => handleCustomFieldChange(field.id, "value", e.target.value)}
+                        style={{ flex: 2, padding: "8px 12px", fontSize: "12px" }}
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveCustomField(field.id)}
+                        style={{
+                          background: "rgba(239, 68, 68, 0.1)",
+                          color: "#ef4444",
+                          border: "none",
+                          borderRadius: "4px",
+                          width: "28px",
+                          height: "28px",
+                          cursor: "pointer",
+                          display: "grid",
+                          placeItems: "center"
+                        }}
+                        title="Remove Field"
+                      >
+                        <i className="fa-solid fa-trash" style={{ fontSize: "11px" }}></i>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="modal-footer">

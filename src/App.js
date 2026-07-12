@@ -465,6 +465,36 @@ function App() {
       }
     }
 
+    // Decrypt custom fields for editing
+    if (item.fields.customFields) {
+      const decryptedCustomFields = [];
+      for (const field of item.fields.customFields) {
+        if (field.value) {
+          try {
+            const dec = await decryptText(field.value, rawPassword);
+            decryptedCustomFields.push({
+              id: field.id,
+              name: field.name,
+              value: dec
+            });
+          } catch (e) {
+            decryptedCustomFields.push({
+              id: field.id,
+              name: field.name,
+              value: ""
+            });
+          }
+        } else {
+          decryptedCustomFields.push({
+            id: field.id,
+            name: field.name,
+            value: ""
+          });
+        }
+      }
+      decryptedFields.customFields = decryptedCustomFields;
+    }
+
     setModalState({
       type: "edit",
       item: {
@@ -503,6 +533,28 @@ function App() {
           encryptedFields[key] = "";
         }
       }
+    }
+
+    // Encrypt custom fields
+    if (modalData.fields.customFields) {
+      const encryptedCustomFields = [];
+      for (const field of modalData.fields.customFields) {
+        if (field.value) {
+          const cipher = await encryptText(field.value, rawPassword);
+          encryptedCustomFields.push({
+            id: field.id,
+            name: field.name,
+            value: cipher
+          });
+        } else {
+          encryptedCustomFields.push({
+            id: field.id,
+            name: field.name,
+            value: ""
+          });
+        }
+      }
+      encryptedFields.customFields = encryptedCustomFields;
     }
 
     // Compute and save unencrypted previews as metadata
