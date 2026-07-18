@@ -313,7 +313,8 @@ function App() {
                 cardNumberPreview: "4242",
                 cardExpiry: await encryptText("12/28", password),
                 cardExpiryPreview: "12/28",
-                cardCvv: await encryptText("123", password)
+                cardCvv: await encryptText("123", password),
+                cardPin: await encryptText("8899", password)
               }
             },
             {
@@ -449,7 +450,7 @@ function App() {
     
     const sensitiveFieldsMap = {
       website: ["password"],
-      card: ["cardNumber", "cardExpiry", "cardCvv"],
+      card: ["cardNumber", "cardExpiry", "cardCvv", "cardPin"],
       bank: ["accountNumber", "ifscCode", "upiPin"],
       apikey: ["apiKeyValue"],
       identity: ["idNumber"],
@@ -526,7 +527,7 @@ function App() {
     
     const sensitiveFieldsMap = {
       website: ["password"],
-      card: ["cardNumber", "cardExpiry", "cardCvv"],
+      card: ["cardNumber", "cardExpiry", "cardCvv", "cardPin"],
       bank: ["accountNumber", "ifscCode", "upiPin"],
       apikey: ["apiKeyValue"],
       identity: ["idNumber"],
@@ -607,7 +608,7 @@ function App() {
 
     const sensitiveFieldsMap = {
       website: ["password"],
-      card: ["cardNumber", "cardExpiry", "cardCvv"],
+      card: ["cardNumber", "cardExpiry", "cardCvv", "cardPin"],
       bank: ["accountNumber", "ifscCode", "upiPin"],
       apikey: ["apiKeyValue"],
       identity: ["idNumber"],

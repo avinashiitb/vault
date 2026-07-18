@@ -118,6 +118,7 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
   const [cardNumber, setCardNumber] = useState(item?.fields?.cardNumber || "");
   const [cardExpiry, setCardExpiry] = useState(item?.fields?.cardExpiry || "");
   const [cardCvv, setCardCvv] = useState(item?.fields?.cardCvv || "");
+  const [cardPin, setCardPin] = useState(item?.fields?.cardPin || "");
 
   const [bankSub, setBankSub] = useState(item?.fields?.bankSub || "");
   const [accountNumber, setAccountNumber] = useState(item?.fields?.accountNumber || "");
@@ -205,7 +206,7 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
     if (category === "website") {
       fields = { username, password, url };
     } else if (category === "card") {
-      fields = { cardholder, cardNumber, cardExpiry, cardCvv };
+      fields = { cardholder, cardNumber, cardExpiry, cardCvv, cardPin };
     } else if (category === "bank") {
       fields = { bankSub, accountNumber, ifscCode, upiPin };
     } else if (category === "apikey") {
@@ -276,6 +277,7 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
                   <div style={{ display: "flex", gap: "12px" }}>
                     <div style={{ flex: 1 }}><ViewFieldRow label="Expiry Date" value={cardExpiry} /></div>
                     <div style={{ flex: 1 }}><ViewFieldRow label="CVV" value={cardCvv} isSecret={true} /></div>
+                    <div style={{ flex: 1 }}><ViewFieldRow label="PIN" value={cardPin} isSecret={true} /></div>
                   </div>
                 </>
               )}
@@ -500,6 +502,16 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
                         maxLength="4"
                         value={cardCvv}
                         onChange={(e) => setCardCvv(e.target.value)}
+                      />
+                    </div>
+                    <div className="form-group flex-1">
+                      <label>PIN</label>
+                      <input
+                        type="text"
+                        placeholder="••••"
+                        maxLength="6"
+                        value={cardPin}
+                        onChange={(e) => setCardPin(e.target.value)}
                       />
                     </div>
                   </div>
