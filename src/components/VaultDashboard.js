@@ -21,6 +21,21 @@ const VaultDashboard = ({
   const [searchQuery, setSearchQuery] = useState("");
   const [autoLockSeconds, setAutoLockSeconds] = useState(300); // 5 minutes
   const [revealedCountdowns, setRevealedCountdowns] = useState({}); // itemId_fieldKey -> seconds left
+  const [expandedSections, setExpandedSections] = useState({
+    website: false,
+    card: false,
+    bank: false,
+    env: false,
+    apikey: false,
+    identity: false
+  });
+
+  const toggleSection = (sectionKey) => {
+    setExpandedSections((prev) => ({
+      ...prev,
+      [sectionKey]: !prev[sectionKey]
+    }));
+  };
 
   const autoLockTimer = useRef(null);
   const countdownTimers = useRef({});
@@ -163,11 +178,22 @@ const VaultDashboard = ({
     return "••••••••";
   };
 
+  // Helper to determine custom fields display limit
+  const getCustomFieldsLimit = (category) => {
+    if (category === "apikey" || category === "identity") return 1;
+    if (category === "card" || category === "bank") return 2;
+    return 3; // website, env, others
+  };
+
   // Render Custom Fields inline as secret pills
   const renderCustomFieldsInline = (item) => {
     if (!item.fields || !item.fields.customFields || item.fields.customFields.length === 0) return null;
     
-    return item.fields.customFields.map((cf) => {
+    const limit = getCustomFieldsLimit(item.category);
+    const visibleFields = item.fields.customFields.slice(0, limit);
+    const hasMore = item.fields.customFields.length > limit;
+    
+    const pills = visibleFields.map((cf) => {
       const customSecretKey = `custom-${cf.id}`;
       const isCfRevealed = revealedSecrets[item.id]?.[customSecretKey] !== undefined;
       const countdown = revealedCountdowns[`${item.id}_${customSecretKey}`] || 0;
@@ -193,6 +219,25 @@ const VaultDashboard = ({
         </span>
       );
     });
+
+    if (hasMore) {
+      pills.push(
+        <span
+          key="more-dots"
+          className="secret-pill font-mono"
+          style={{ opacity: 0.5, cursor: "pointer", display: "inline-flex", alignItems: "center" }}
+          onClick={(e) => {
+            e.stopPropagation();
+            onViewItem(item);
+          }}
+          title="Click to view all fields"
+        >
+          ...
+        </span>
+      );
+    }
+    
+    return pills;
   };
 
   // Filter items based on search query
@@ -357,7 +402,7 @@ const VaultDashboard = ({
             </div>
 
             <div className="category-card-list">
-              {websites.map((item) => {
+              {websites.slice(0, expandedSections.website ? websites.length : 3).map((item) => {
                 const isRevealed = revealedSecrets[item.id]?.password !== undefined;
                 const countdown = revealedCountdowns[`${item.id}_password`] || 0;
                 return (
@@ -420,6 +465,21 @@ const VaultDashboard = ({
                 );
               })}
             </div>
+            {websites.length > 3 && (
+              <div className="section-expand-container">
+                <button className="section-expand-btn" onClick={() => toggleSection("website")}>
+                  {expandedSections.website ? (
+                    <>
+                      <i className="fa-solid fa-chevron-up"></i> Show less
+                    </>
+                  ) : (
+                    <>
+                      <i className="fa-solid fa-ellipsis"></i> Show {websites.length - 3} more
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
           </div>
         )}
 
@@ -435,7 +495,7 @@ const VaultDashboard = ({
             </div>
 
             <div className="category-card-list">
-              {cards.map((item) => {
+              {cards.slice(0, expandedSections.card ? cards.length : 3).map((item) => {
                 const isRevealed = revealedSecrets[item.id]?.cardNumber !== undefined;
                 const isVisa = item.title.toLowerCase().includes("visa");
                 const cardTypeLabel = isVisa ? "VISA" : "MC";
@@ -503,6 +563,21 @@ const VaultDashboard = ({
                 );
               })}
             </div>
+            {cards.length > 3 && (
+              <div className="section-expand-container">
+                <button className="section-expand-btn" onClick={() => toggleSection("card")}>
+                  {expandedSections.card ? (
+                    <>
+                      <i className="fa-solid fa-chevron-up"></i> Show less
+                    </>
+                  ) : (
+                    <>
+                      <i className="fa-solid fa-ellipsis"></i> Show {cards.length - 3} more
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
           </div>
         )}
 
@@ -519,7 +594,7 @@ const VaultDashboard = ({
             </div>
 
             <div className="category-card-list">
-              {banks.map((item) => {
+              {banks.slice(0, expandedSections.bank ? banks.length : 3).map((item) => {
                 const isRevealed = revealedSecrets[item.id]?.accountNumber !== undefined;
                 const countdown = revealedCountdowns[`${item.id}_accountNumber`] || 0;
                 return (
@@ -588,6 +663,21 @@ const VaultDashboard = ({
                 );
               })}
             </div>
+            {banks.length > 3 && (
+              <div className="section-expand-container">
+                <button className="section-expand-btn" onClick={() => toggleSection("bank")}>
+                  {expandedSections.bank ? (
+                    <>
+                      <i className="fa-solid fa-chevron-up"></i> Show less
+                    </>
+                  ) : (
+                    <>
+                      <i className="fa-solid fa-ellipsis"></i> Show {banks.length - 3} more
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
           </div>
         )}
 
@@ -603,7 +693,7 @@ const VaultDashboard = ({
             </div>
 
             <div className="category-card-list">
-              {envs.map((item) => {
+              {envs.slice(0, expandedSections.env ? envs.length : 3).map((item) => {
                 const count = item.fields.envContent ? item.fields.envContent.split("\n").filter(line => line.trim() && !line.trim().startsWith("#")).length : 0;
                 return (
                   <div key={item.id} className="item-row">
@@ -660,6 +750,21 @@ const VaultDashboard = ({
                 );
               })}
             </div>
+            {envs.length > 3 && (
+              <div className="section-expand-container">
+                <button className="section-expand-btn" onClick={() => toggleSection("env")}>
+                  {expandedSections.env ? (
+                    <>
+                      <i className="fa-solid fa-chevron-up"></i> Show less
+                    </>
+                  ) : (
+                    <>
+                      <i className="fa-solid fa-ellipsis"></i> Show {envs.length - 3} more
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
           </div>
         )}
 
@@ -677,7 +782,7 @@ const VaultDashboard = ({
                 </div>
 
                 <div className="category-card-list">
-                  {apikeys.map((item) => (
+                  {apikeys.slice(0, expandedSections.apikey ? apikeys.length : 3).map((item) => (
                     <div key={item.id} className="item-row grid-item-row">
                       <div className="item-info">
                         <span className="item-name-title">{item.title}</span>
@@ -726,6 +831,21 @@ const VaultDashboard = ({
                     </div>
                   ))}
                 </div>
+                {apikeys.length > 3 && (
+                  <div className="section-expand-container">
+                    <button className="section-expand-btn" onClick={() => toggleSection("apikey")}>
+                      {expandedSections.apikey ? (
+                        <>
+                          <i className="fa-solid fa-chevron-up"></i> Show less
+                        </>
+                      ) : (
+                        <>
+                          <i className="fa-solid fa-ellipsis"></i> Show {apikeys.length - 3} more
+                        </>
+                      )}
+                    </button>
+                  </div>
+                )}
               </div>
             )}
 
@@ -744,7 +864,7 @@ const VaultDashboard = ({
                 </div>
 
                 <div className="category-card-list">
-                  {identities.map((item) => {
+                  {identities.slice(0, expandedSections.identity ? identities.length : 3).map((item) => {
                     const isRevealed = revealedSecrets[item.id]?.idNumber !== undefined;
                     const countdown = revealedCountdowns[`${item.id}_idNumber`] || 0;
                     return (
@@ -801,6 +921,21 @@ const VaultDashboard = ({
                     );
                   })}
                 </div>
+                {identities.length > 3 && (
+                  <div className="section-expand-container">
+                    <button className="section-expand-btn" onClick={() => toggleSection("identity")}>
+                      {expandedSections.identity ? (
+                        <>
+                          <i className="fa-solid fa-chevron-up"></i> Show less
+                        </>
+                      ) : (
+                        <>
+                          <i className="fa-solid fa-ellipsis"></i> Show {identities.length - 3} more
+                        </>
+                      )}
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </div>
