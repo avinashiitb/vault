@@ -596,7 +596,7 @@ function App() {
   };
 
   // 7. Add / Edit Save Item callback
-  const handleSaveItem = async (modalData) => {
+  const handleSaveItem = async (modalData, silent = false) => {
     const isNew = !modalData.id;
     const itemId = modalData.id || uid();
 
@@ -703,10 +703,13 @@ function App() {
     }));
 
     setModalState(null);
-    showToast(isNew ? "Credential added!" : "Credential updated!", "success");
+    if (!silent) {
+      showToast(isNew ? "Credential added!" : "Credential updated!", "success");
+    }
 
     // Save to file
     await saveStateToDatabase(updatedEncryptedItems);
+    return itemId;
   };
 
   // 8. Delete Vault Item callback
@@ -827,8 +830,7 @@ function App() {
           item={envEditorState.item}
           theme={theme}
           onSave={async (data) => {
-            await handleSaveItem(data);
-            setEnvEditorState(null);
+            return await handleSaveItem(data, true);
           }}
           onClose={() => setEnvEditorState(null)}
         />

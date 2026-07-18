@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Editor from "@monaco-editor/react";
 import "./EnvEditor.css";
 
@@ -8,24 +8,49 @@ const EnvEditor = ({ mode, item, theme, onSave, onClose }) => {
   const [content, setContent] = useState(item?.fields?.envContent || "");
   const [copied, setCopied] = useState(false);
 
+  const [currentItemId, setCurrentItemId] = useState(item?.id);
+  const [saveStatus, setSaveStatus] = useState("Saved");
+
   const isView = editorMode === "view";
+  const isInitial = useRef(true);
+
+  // Debounced Auto-saving
+  useEffect(() => {
+    if (isView) return;
+
+    if (isInitial.current) {
+      isInitial.current = false;
+      return;
+    }
+
+    setSaveStatus("Saving...");
+
+    const delayDebounceFn = setTimeout(async () => {
+      try {
+        const savedId = await onSave({
+          id: currentItemId,
+          category: "env",
+          title: title.trim() || "Untitled Env",
+          fields: {
+            envContent: content
+          }
+        });
+        if (savedId) {
+          setCurrentItemId(savedId);
+        }
+        setSaveStatus("Saved");
+      } catch (err) {
+        setSaveStatus("Error saving");
+      }
+    }, 1000); // 1-second debounce
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [title, content, isView, onSave, currentItemId]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(content);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-  };
-
-  const handleSave = () => {
-    if (!title.trim()) return;
-    onSave({
-      id: item?.id, // undefined for new items
-      category: "env",
-      title: title.trim(),
-      fields: {
-        envContent: content
-      }
-    });
   };
 
   return (
@@ -50,6 +75,21 @@ const EnvEditor = ({ mode, item, theme, onSave, onClose }) => {
               />
             )}
           </div>
+
+          {/* Auto-save Status Indicator */}
+          {!isView && (
+            <div className={`save-status-indicator ${saveStatus === "Saving..." ? "saving" : "saved"}`}>
+              {saveStatus === "Saving..." ? (
+                <>
+                  <span className="status-dot pulse-amber">●</span> Saving...
+                </>
+              ) : (
+                <>
+                  <span className="status-dot green">✓</span> Saved
+                </>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Mode Selector & Control Panel */}
@@ -86,13 +126,6 @@ const EnvEditor = ({ mode, item, theme, onSave, onClose }) => {
               </>
             )}
           </button>
-
-          {/* Save Button */}
-          {!isView && (
-            <button className="action-btn-styled save-btn" onClick={handleSave}>
-              <i className="fa-solid fa-save"></i> Save Env
-            </button>
-          )}
         </div>
       </div>
 

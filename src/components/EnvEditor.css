@@ -128,6 +128,52 @@
   border-color: var(--green-primary, #10b981);
 }
 
+/* Auto-save status indicator styles */
+.save-status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  margin-left: 8px;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.save-status-indicator.saving {
+  color: var(--text-secondary);
+}
+
+.save-status-indicator.saved {
+  color: #10b981;
+}
+
+.status-dot {
+  font-size: 10px;
+  line-height: 1;
+}
+
+.status-dot.green {
+  color: #10b981;
+}
+
+.pulse-amber {
+  color: #f59e0b;
+  animation: pulse-animation 1.2s infinite ease-in-out;
+}
+
+@keyframes pulse-animation {
+  0% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.4;
+  }
+}
+
 .header-actions {
   display: flex;
   align-items: center;
@@ -214,17 +260,6 @@
   background: rgba(34, 197, 94, 0.1) !important;
   color: #22c55e !important;
   border-color: #22c55e !important;
-}
-
-.save-btn {
-  background: var(--green-primary, #10b981) !important;
-  color: #ffffff !important;
-  border: none !important;
-}
-
-.save-btn:hover {
-  background: #059669 !important;
-  box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
 }
 
 /* Monaco container */
