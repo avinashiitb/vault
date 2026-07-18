@@ -7,7 +7,6 @@ const CATEGORIES = [
   { value: "bank", label: "Bank Account" },
   { value: "apikey", label: "API Key / Credentials" },
   { value: "identity", label: "Identity Document" },
-  { value: "env", label: "Environment Variables" },
 ];
 
 const ViewFieldRow = ({ label, value, isSecret }) => {

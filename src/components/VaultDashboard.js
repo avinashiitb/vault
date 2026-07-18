@@ -6,6 +6,7 @@ const VaultDashboard = ({
   onAddItem,
   onEditItem,
   onViewItem,
+  onAddEnv,
   onDeleteItem,
   onLock,
   onCopyText,
@@ -362,6 +363,15 @@ const VaultDashboard = ({
               <line x1="5" y1="12" x2="19" y2="12"></line>
             </svg>
             Add item
+          </button>
+
+          {/* Add Env Variable Button */}
+          <button className="btn-add-item btn-add-env" onClick={onAddEnv} style={{ background: "rgba(16, 185, 129, 0.1)", color: "#10b981", border: "1px solid rgba(16, 185, 129, 0.2)" }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ marginRight: "4px" }}>
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+            Add Env Variable
           </button>
 
           {/* Manual Lock */}

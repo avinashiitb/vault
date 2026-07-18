@@ -3,6 +3,7 @@ import "./App.css";
 import LockScreen from "./components/LockScreen";
 import VaultDashboard from "./components/VaultDashboard";
 import ItemModal from "./components/ItemModal";
+import EnvEditor from "./components/EnvEditor";
 import Toast from "./components/Toast";
 import { encryptText, decryptText, hashMasterPassword } from "./utils/crypto";
 
@@ -28,6 +29,7 @@ function App() {
 
   // UI overlays
   const [modalState, setModalState] = useState(null); // { type: 'add'|'edit', item?: obj }
+  const [envEditorState, setEnvEditorState] = useState(null); // { type: 'add'|'edit'|'view', item?: obj }
   const [toast, setToast] = useState(null); // { message, type }
   const [isReady, setIsReady] = useState(false);
 
@@ -496,6 +498,17 @@ function App() {
       decryptedFields.customFields = decryptedCustomFields;
     }
 
+    if (item.category === "env") {
+      setEnvEditorState({
+        type: "edit",
+        item: {
+          ...item,
+          fields: decryptedFields
+        }
+      });
+      return;
+    }
+
     setModalState({
       type: "edit",
       item: {
@@ -560,6 +573,17 @@ function App() {
         }
       }
       decryptedFields.customFields = decryptedCustomFields;
+    }
+
+    if (item.category === "env") {
+      setEnvEditorState({
+        type: "view",
+        item: {
+          ...item,
+          fields: decryptedFields
+        }
+      });
+      return;
     }
 
     setModalState({
@@ -773,6 +797,7 @@ function App() {
       <VaultDashboard
         items={encryptedItems}
         onAddItem={() => setModalState({ type: "add" })}
+        onAddEnv={() => setEnvEditorState({ type: "add" })}
         onEditItem={handleEditClick}
         onViewItem={handleViewClick}
         onDeleteItem={handleDeleteItem}
@@ -793,6 +818,18 @@ function App() {
           item={modalState.item}
           onSave={handleSaveItem}
           onClose={() => setModalState(null)}
+        />
+      )}
+
+      {envEditorState && (
+        <EnvEditor
+          mode={envEditorState.type}
+          item={envEditorState.item}
+          onSave={async (data) => {
+            await handleSaveItem(data);
+            setEnvEditorState(null);
+          }}
+          onClose={() => setEnvEditorState(null)}
         />
       )}
 
