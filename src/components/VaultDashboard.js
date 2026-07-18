@@ -151,7 +151,7 @@ const VaultDashboard = ({
     // 2. Default masked with preview fallback
     if (secretType === "password" || secretType === "cardCvv" || secretType === "upiPin") {
       if (secretType === "cardCvv") return "•••";
-      if (secretType === "upiPin") return "UPI PIN ••••";
+      if (secretType === "upiPin") return "PIN ••••";
       return "••••••••••••";
     }
 
@@ -159,7 +159,7 @@ const VaultDashboard = ({
     if (preview) {
       if (secretType === "cardNumber") return `···· ···· ···· ${preview}`;
       if (secretType === "cardExpiry") return `Exp ${preview}`;
-      if (secretType === "accountNumber") return `A/C ······${preview}`;
+      if (secretType === "accountNumber") return `A/c ······${preview}`;
       if (secretType === "ifscCode") return `IFSC ${preview}`;
       if (secretType === "apiKeyValue") return `${preview}`;
       if (secretType === "idNumber") return `${preview}`;
@@ -169,7 +169,7 @@ const VaultDashboard = ({
     // Static fallback if preview isn't loaded yet
     if (secretType === "cardNumber") return "···· ···· ···· 4242";
     if (secretType === "cardExpiry") return "Exp 09/27";
-    if (secretType === "accountNumber") return "A/C ······6641";
+    if (secretType === "accountNumber") return "A/c ······6641";
     if (secretType === "ifscCode") return "IFSC HDFC000••••";
     if (secretType === "apiKeyValue") return "ghp_••••••••••••";
     if (secretType === "idNumber") return "Z••••••93";
@@ -591,7 +591,6 @@ const VaultDashboard = ({
                           hides in {countdown}s
                         </span>
                       )}
-                      {renderCustomFieldsInline(item)}
                     </div>
 
                     <div className="item-card-actions">

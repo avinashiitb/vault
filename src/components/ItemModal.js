@@ -287,7 +287,7 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
                   <ViewFieldRow label="Account Number" value={accountNumber} isSecret={true} />
                   <div style={{ display: "flex", gap: "12px" }}>
                     <div style={{ flex: 1 }}><ViewFieldRow label="IFSC Code" value={ifscCode} /></div>
-                    <div style={{ flex: 1 }}><ViewFieldRow label="UPI PIN" value={upiPin} isSecret={true} /></div>
+                    <div style={{ flex: 1 }}><ViewFieldRow label="PIN" value={upiPin} isSecret={true} /></div>
                   </div>
                 </>
               )}
@@ -538,7 +538,7 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
                       />
                     </div>
                     <div className="form-group flex-1">
-                      <label>UPI PIN</label>
+                      <label>PIN</label>
                       <input
                         type="text"
                         placeholder="••••"
