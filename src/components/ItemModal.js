@@ -272,7 +272,7 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
                   {loginMethod && loginMethod !== "password" ? (
                     <ViewFieldRow
                       label="Login Method"
-                      value={loginMethod === "otp" ? "OTP Login" : loginMethod === "google" ? "Google SSO" : "GitHub SSO"}
+                      value={loginMethod === "otp" ? "OTP Login" : "SSO Login"}
                     />
                   ) : (
                     <ViewFieldRow label="Password" value={password} isSecret={true} />
@@ -470,8 +470,7 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
                     >
                       <option value="password">Password</option>
                       <option value="otp">OTP (One-Time Password)</option>
-                      <option value="google">SSO (Google)</option>
-                      <option value="github">SSO (GitHub)</option>
+                      <option value="sso">SSO (Single Sign-On)</option>
                     </select>
                   </div>
                   {loginMethod === "password" && (

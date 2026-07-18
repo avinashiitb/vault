@@ -422,10 +422,8 @@ const VaultDashboard = ({
                       {item.fields.loginMethod && item.fields.loginMethod !== "password" ? (
                         item.fields.loginMethod === "otp" ? (
                           <span className="login-method-badge otp-badge">OTP Login</span>
-                        ) : item.fields.loginMethod === "google" ? (
-                          <span className="login-method-badge sso-google-badge"><i className="fa-brands fa-google"></i> Google SSO</span>
                         ) : (
-                          <span className="login-method-badge sso-github-badge"><i className="fa-brands fa-github"></i> GitHub SSO</span>
+                          <span className="login-method-badge sso-badge">SSO Login</span>
                         )
                       ) : (
                         <span className={`secret-pill font-mono ${isRevealed ? "revealed-pill" : ""}`}>
