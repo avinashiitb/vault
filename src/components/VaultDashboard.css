@@ -176,7 +176,7 @@
 
 /* Card Item Styling */
 .item-row {
-  width: calc(33.333% - 11px);
+  width: calc(50% - 8px);
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -240,11 +240,6 @@
   opacity: 1;
 }
 
-@media (max-width: 1024px) {
-  .item-row {
-    width: calc(50% - 8px);
-  }
-}
 
 @media (max-width: 640px) {
   .item-row {
