@@ -16,7 +16,7 @@
 
 .modal-card {
   width: 100%;
-  max-width: 520px;
+  max-width: 600px;
   max-height: 90vh;
   background-color: var(--bg-panel);
   border: 1px solid var(--border-color);

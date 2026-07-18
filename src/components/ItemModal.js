@@ -40,6 +40,7 @@ const ViewFieldRow = ({ label, value, isSecret }) => {
           fontSize: "13px",
           color: "var(--text-primary)",
           wordBreak: "break-all",
+          whiteSpace: "nowrap",
           flex: 1
         }}>
           {isSecret && !revealed ? "••••••••••••" : value || "—"}
