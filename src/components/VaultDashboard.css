@@ -167,43 +167,89 @@
 }
 
 .category-card-list {
-  background-color: var(--bg-panel);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+/* Card Item Styling */
+.item-row {
+  width: calc(33.333% - 11px);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 14px;
+  padding: 16px;
   border: 1px solid var(--border-color);
-  border-radius: 10px;
-  overflow: hidden;
+  background-color: var(--bg-panel);
+  border-radius: 12px;
+  box-sizing: border-box;
+  position: relative;
+  transition: all 0.2s ease;
   box-shadow: var(--shadow-sm);
 }
 
-/* Row Styling */
-.item-row {
-  display: flex;
-  align-items: center;
-  flex-wrap: nowrap;
-  gap: 14px;
-  padding: 11px 16px;
-  border-top: 1px solid var(--border-color);
-  position: relative;
-  transition: background-color 0.15s ease;
-}
-
-.item-row:first-child {
-  border-top: none;
-}
-
 .item-row:hover {
-  background-color: rgba(0, 0, 0, 0.015);
+  background-color: rgba(0, 0, 0, 0.01);
+  border-color: var(--text-muted);
 }
 
 .dark-theme .item-row:hover {
-  background-color: rgba(255, 255, 255, 0.015);
+  background-color: rgba(255, 255, 255, 0.01);
+  border-color: var(--text-muted);
 }
 
 .item-row.revealed-bg {
   background-color: var(--green-light);
+  border-color: rgba(22, 163, 74, 0.3);
 }
 
 .dark-theme .item-row.revealed-bg {
   background-color: rgba(22, 163, 74, 0.08);
+  border-color: rgba(22, 163, 74, 0.3);
+}
+
+/* Card Header Components */
+.item-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.item-card-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.item-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.item-card-actions .row-action-btn {
+  opacity: 0.65;
+  transition: opacity 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+.item-row:hover .item-card-actions .row-action-btn {
+  opacity: 1;
+}
+
+@media (max-width: 1024px) {
+  .item-row {
+    width: calc(50% - 8px);
+  }
+}
+
+@media (max-width: 640px) {
+  .item-row {
+    width: 100%;
+  }
 }
 
 /* Avatars */
