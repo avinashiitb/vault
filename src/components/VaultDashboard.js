@@ -365,15 +365,6 @@ const VaultDashboard = ({
             Add item
           </button>
 
-          {/* Add Env Variable Button */}
-          <button className="btn-add-item btn-add-env" onClick={onAddEnv} style={{ background: "rgba(16, 185, 129, 0.1)", color: "#10b981", border: "1px solid rgba(16, 185, 129, 0.2)" }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ marginRight: "4px" }}>
-              <polyline points="16 18 22 12 16 6"></polyline>
-              <polyline points="8 6 2 12 8 18"></polyline>
-            </svg>
-            Add Env Variable
-          </button>
-
           {/* Manual Lock */}
           <button className="btn-manual-lock" onClick={onLock} title="Lock Vault Now">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
