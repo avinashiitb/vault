@@ -12,14 +12,24 @@ const EnvEditor = ({ mode, item, theme, onSave, onClose }) => {
   const [saveStatus, setSaveStatus] = useState("Saved");
 
   const isView = editorMode === "view";
-  const isInitial = useRef(true);
+
+  // Prevent parent re-renders from triggering save loops by referencing onSave via a ref
+  const onSaveRef = useRef(onSave);
+  useEffect(() => {
+    onSaveRef.current = onSave;
+  }, [onSave]);
+
+  // Keep track of the last saved state to prevent initial mount saves and loops
+  const lastSavedTitle = useRef(item?.title || "Untitled Env");
+  const lastSavedContent = useRef(item?.fields?.envContent || "");
 
   // Debounced Auto-saving
   useEffect(() => {
     if (isView) return;
 
-    if (isInitial.current) {
-      isInitial.current = false;
+    // If title and content match the last saved state, we are already synced
+    if (title === lastSavedTitle.current && content === lastSavedContent.current) {
+      setSaveStatus("Saved");
       return;
     }
 
@@ -27,7 +37,7 @@ const EnvEditor = ({ mode, item, theme, onSave, onClose }) => {
 
     const delayDebounceFn = setTimeout(async () => {
       try {
-        const savedId = await onSave({
+        const savedId = await onSaveRef.current({
           id: currentItemId,
           category: "env",
           title: title.trim() || "Untitled Env",
@@ -38,6 +48,9 @@ const EnvEditor = ({ mode, item, theme, onSave, onClose }) => {
         if (savedId) {
           setCurrentItemId(savedId);
         }
+        // Update refs to reflect the newly saved state
+        lastSavedTitle.current = title;
+        lastSavedContent.current = content;
         setSaveStatus("Saved");
       } catch (err) {
         setSaveStatus("Error saving");
@@ -45,7 +58,7 @@ const EnvEditor = ({ mode, item, theme, onSave, onClose }) => {
     }, 1000); // 1-second debounce
 
     return () => clearTimeout(delayDebounceFn);
-  }, [title, content, isView, onSave, currentItemId]);
+  }, [title, content, isView, currentItemId]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(content);
