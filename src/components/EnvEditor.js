@@ -33,7 +33,7 @@ const EnvEditor = ({ mode, item, theme, onSave, onClose }) => {
       return;
     }
 
-    setSaveStatus("Saving...");
+    setSaveStatus("Saving");
 
     const delayDebounceFn = setTimeout(async () => {
       try {
@@ -91,14 +91,14 @@ const EnvEditor = ({ mode, item, theme, onSave, onClose }) => {
 
           {/* Auto-save Status Indicator */}
           {!isView && (
-            <div className={`save-status-indicator ${saveStatus === "Saving..." ? "saving" : "saved"}`}>
-              {saveStatus === "Saving..." ? (
+            <div className={`save-status-indicator ${saveStatus === "Saving" ? "saving" : "saved"}`}>
+              {saveStatus === "Saving" ? (
                 <>
-                  <span className="status-dot pulse-amber">●</span> Saving...
+                  <span className="status-dot pulse-amber">●</span> Auto saving...
                 </>
               ) : (
                 <>
-                  <span className="status-dot green">✓</span> Saved
+                  <span className="status-dot green">✓</span> Auto saved
                 </>
               )}
             </div>
