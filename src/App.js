@@ -4,6 +4,7 @@ import LockScreen from "./components/LockScreen";
 import VaultDashboard from "./components/VaultDashboard";
 import ItemModal from "./components/ItemModal";
 import EnvEditor from "./components/EnvEditor";
+import CategorySelectorModal from "./components/CategorySelectorModal";
 import Toast from "./components/Toast";
 import { encryptText, decryptText, hashMasterPassword } from "./utils/crypto";
 
@@ -30,6 +31,7 @@ function App() {
   // UI overlays
   const [modalState, setModalState] = useState(null); // { type: 'add'|'edit', item?: obj }
   const [envEditorState, setEnvEditorState] = useState(null); // { type: 'add'|'edit'|'view', item?: obj }
+  const [showAddSelector, setShowAddSelector] = useState(false);
   const [toast, setToast] = useState(null); // { message, type }
   const [isReady, setIsReady] = useState(false);
 
@@ -799,7 +801,7 @@ function App() {
     <div className={`App ${theme}-theme`}>
       <VaultDashboard
         items={encryptedItems}
-        onAddItem={() => setModalState({ type: "add" })}
+        onAddItem={() => setShowAddSelector(true)}
         onAddEnv={() => setEnvEditorState({ type: "add" })}
         onEditItem={handleEditClick}
         onViewItem={handleViewClick}
@@ -833,6 +835,20 @@ function App() {
             return await handleSaveItem(data, true);
           }}
           onClose={() => setEnvEditorState(null)}
+        />
+      )}
+
+      {showAddSelector && (
+        <CategorySelectorModal
+          onClose={() => setShowAddSelector(false)}
+          onSelect={(category) => {
+            setShowAddSelector(false);
+            if (category === "env") {
+              setEnvEditorState({ type: "add" });
+            } else {
+              setModalState({ type: "add", item: { category } });
+            }
+          }}
         />
       )}
 
