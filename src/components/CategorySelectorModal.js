@@ -4,10 +4,17 @@ import "./CategorySelectorModal.css";
 const CATEGORIES_LIST = [
   {
     value: "website",
-    label: "Website / App",
+    label: "Website Login",
     desc: "Passwords, PINs, usernames, and login URLs",
     iconClass: "fa-solid fa-globe",
     color: "#3b82f6" // blue
+  },
+  {
+    value: "app",
+    label: "App Login",
+    desc: "Passwords, PINs, and usernames for mobile or desktop apps",
+    iconClass: "fa-solid fa-mobile-screen-button",
+    color: "#06b6d4" // cyan
   },
   {
     value: "card",

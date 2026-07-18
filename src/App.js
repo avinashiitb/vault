@@ -450,6 +450,7 @@ function App() {
     
     const sensitiveFieldsMap = {
       website: ["password"],
+      app: ["password"],
       card: ["cardNumber", "cardExpiry", "cardCvv", "cardPin"],
       bank: ["accountNumber", "ifscCode", "upiPin"],
       apikey: ["apiKeyValue"],
@@ -527,6 +528,7 @@ function App() {
     
     const sensitiveFieldsMap = {
       website: ["password"],
+      app: ["password"],
       card: ["cardNumber", "cardExpiry", "cardCvv", "cardPin"],
       bank: ["accountNumber", "ifscCode", "upiPin"],
       apikey: ["apiKeyValue"],
@@ -608,6 +610,7 @@ function App() {
 
     const sensitiveFieldsMap = {
       website: ["password"],
+      app: ["password"],
       card: ["cardNumber", "cardExpiry", "cardCvv", "cardPin"],
       bank: ["accountNumber", "ifscCode", "upiPin"],
       apikey: ["apiKeyValue"],

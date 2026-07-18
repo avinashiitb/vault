@@ -2,7 +2,8 @@ import React, { useState, useEffect, useCallback } from "react";
 import "./ItemModal.css";
 
 const CATEGORIES = [
-  { value: "website", label: "Website / App" },
+  { value: "website", label: "Website" },
+  { value: "app", label: "App" },
   { value: "card", label: "Payment Card" },
   { value: "bank", label: "Bank Account" },
   { value: "apikey", label: "API Key / Credentials" },
@@ -208,8 +209,8 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
     if (!title.trim()) return;
 
     let fields = {};
-    if (category === "website") {
-      fields = { username, password: (loginMethod === "password" || loginMethod === "pin") ? password : "", url, loginMethod };
+    if (category === "website" || category === "app") {
+      fields = { username, password: (loginMethod === "password" || loginMethod === "pin") ? password : "", url: category === "website" ? url : "", loginMethod };
     } else if (category === "card") {
       fields = { cardholder, cardNumber, cardExpiry, cardCvv, cardPin };
     } else if (category === "bank") {
@@ -265,8 +266,8 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-              {/* WEBSITE VIEW */}
-              {category === "website" && (
+              {/* WEBSITE & APP VIEW */}
+              {(category === "website" || category === "app") && (
                 <>
                   <ViewFieldRow label="Username / Email" value={username} />
                   {loginMethod && loginMethod !== "password" && loginMethod !== "pin" ? (
@@ -279,7 +280,7 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
                   ) : (
                     <ViewFieldRow label="Password" value={password} isSecret={true} />
                   )}
-                  <ViewFieldRow label="URL" value={url} />
+                  {category === "website" && <ViewFieldRow label="URL" value={url} />}
                 </>
               )}
 
@@ -435,8 +436,8 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
                 </div>
               </div>
 
-              {/* WEBSITE FIELDS */}
-              {category === "website" && (
+              {/* WEBSITE & APP FIELDS */}
+              {(category === "website" || category === "app") && (
                 <div className="category-fields">
                   <div className="form-group">
                     <label>Username / Email</label>
@@ -508,15 +509,17 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
                       />
                     </div>
                   )}
-                  <div className="form-group">
-                    <label>Website URL (optional)</label>
-                    <input
-                      type="text"
-                      placeholder="https://github.com"
-                      value={url}
-                      onChange={(e) => setUrl(e.target.value)}
-                    />
-                  </div>
+                  {category === "website" && (
+                    <div className="form-group">
+                      <label>Website URL (optional)</label>
+                      <input
+                        type="text"
+                        placeholder="https://github.com"
+                        value={url}
+                        onChange={(e) => setUrl(e.target.value)}
+                      />
+                    </div>
+                  )}
                 </div>
               )}
 
