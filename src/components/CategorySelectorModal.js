@@ -4,8 +4,8 @@ import "./CategorySelectorModal.css";
 const CATEGORIES_LIST = [
   {
     value: "website",
-    label: "Website Login",
-    desc: "Passwords, usernames, and login URLs",
+    label: "Website / App",
+    desc: "Passwords, PINs, usernames, and login URLs",
     iconClass: "fa-solid fa-globe",
     color: "#3b82f6" // blue
   },

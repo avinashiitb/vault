@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import "./ItemModal.css";
 
 const CATEGORIES = [
-  { value: "website", label: "Website" },
+  { value: "website", label: "Website / App" },
   { value: "card", label: "Payment Card" },
   { value: "bank", label: "Bank Account" },
   { value: "apikey", label: "API Key / Credentials" },
@@ -209,7 +209,7 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
 
     let fields = {};
     if (category === "website") {
-      fields = { username, password: loginMethod === "password" ? password : "", url, loginMethod };
+      fields = { username, password: (loginMethod === "password" || loginMethod === "pin") ? password : "", url, loginMethod };
     } else if (category === "card") {
       fields = { cardholder, cardNumber, cardExpiry, cardCvv, cardPin };
     } else if (category === "bank") {
@@ -269,11 +269,13 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
               {category === "website" && (
                 <>
                   <ViewFieldRow label="Username / Email" value={username} />
-                  {loginMethod && loginMethod !== "password" ? (
+                  {loginMethod && loginMethod !== "password" && loginMethod !== "pin" ? (
                     <ViewFieldRow
                       label="Login Method"
                       value={loginMethod === "otp" ? "OTP Login" : "SSO Login"}
                     />
+                  ) : loginMethod === "pin" ? (
+                    <ViewFieldRow label="PIN" value={password} isSecret={true} />
                   ) : (
                     <ViewFieldRow label="Password" value={password} isSecret={true} />
                   )}
@@ -469,10 +471,23 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
                       }}
                     >
                       <option value="password">Password</option>
+                      <option value="pin">PIN</option>
                       <option value="otp">OTP (One-Time Password)</option>
                       <option value="sso">SSO (Single Sign-On)</option>
                     </select>
                   </div>
+                  {loginMethod === "pin" && (
+                    <div className="form-group relative">
+                      <label>PIN</label>
+                      <input
+                        type="text"
+                        placeholder="••••"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        maxLength={6}
+                      />
+                    </div>
+                  )}
                   {loginMethod === "password" && (
                     <div className="form-group relative">
                       <div className="label-row">

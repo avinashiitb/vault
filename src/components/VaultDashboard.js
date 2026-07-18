@@ -143,15 +143,16 @@ const VaultDashboard = ({
   // Helper to determine masking / ciphertexts
   const renderSecret = (itemId, secretType, ciphertext) => {
     // 1. If revealed, show plaintext
-    const revealedVal = revealedSecrets[itemId]?.[secretType];
+    const lookupKey = secretType === "websitePin" ? "password" : secretType;
+    const revealedVal = revealedSecrets[itemId]?.[lookupKey];
     if (revealedVal !== undefined) {
       return revealedVal;
     }
 
     // 2. Default masked with preview fallback
-    if (secretType === "password" || secretType === "cardCvv" || secretType === "upiPin" || secretType === "cardPin") {
+    if (secretType === "password" || secretType === "cardCvv" || secretType === "upiPin" || secretType === "cardPin" || secretType === "websitePin") {
       if (secretType === "cardCvv") return "•••";
-      if (secretType === "upiPin" || secretType === "cardPin") return "PIN ••••";
+      if (secretType === "upiPin" || secretType === "cardPin" || secretType === "websitePin") return "PIN ••••";
       return "••••••••••••";
     }
 
@@ -398,7 +399,7 @@ const VaultDashboard = ({
                 <line x1="2" y1="12" x2="22" y2="12"></line>
                 <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
               </svg>
-              Websites · {websites.length}
+              Websites / Apps · {websites.length}
             </div>
 
             <div className="category-card-list">
@@ -417,9 +418,8 @@ const VaultDashboard = ({
                       <span className="item-name-title">{item.title}</span>
                       <span className="item-sub-title">{item.fields.username}</span>
                     </div>
-
                     <div className="item-secrets">
-                      {item.fields.loginMethod && item.fields.loginMethod !== "password" ? (
+                      {item.fields.loginMethod && item.fields.loginMethod !== "password" && item.fields.loginMethod !== "pin" ? (
                         item.fields.loginMethod === "otp" ? (
                           <span className="login-method-badge otp-badge">OTP Login</span>
                         ) : (
@@ -427,10 +427,10 @@ const VaultDashboard = ({
                         )
                       ) : (
                         <span className={`secret-pill font-mono ${isRevealed ? "revealed-pill" : ""}`}>
-                          {renderSecret(item.id, "password", item.fields.password)}
+                          {renderSecret(item.id, item.fields.loginMethod === "pin" ? "websitePin" : "password", item.fields.password)}
                         </span>
                       )}
-                      {(!item.fields.loginMethod || item.fields.loginMethod === "password") && isRevealed && (
+                      {(!item.fields.loginMethod || item.fields.loginMethod === "password" || item.fields.loginMethod === "pin") && isRevealed && (
                         <span className="reveal-countdown-timer">
                           hides in {countdown}s
                         </span>
@@ -448,8 +448,8 @@ const VaultDashboard = ({
                       <button className="row-action-btn view" onClick={() => onViewItem(item)} title="View Details">
                         <i className="fa-solid fa-eye"></i>
                       </button>
-                      {(!item.fields.loginMethod || item.fields.loginMethod === "password") && (
-                        <button className="row-action-btn copy" onClick={(e) => handleCopy(e, item.fields.password, "Password")} title="Copy Password">
+                      {(!item.fields.loginMethod || item.fields.loginMethod === "password" || item.fields.loginMethod === "pin") && (
+                        <button className="row-action-btn copy" onClick={(e) => handleCopy(e, item.fields.password, item.fields.loginMethod === "pin" ? "PIN" : "Password")} title={item.fields.loginMethod === "pin" ? "Copy PIN" : "Copy Password"}>
                           <i className="fa-solid fa-copy"></i>
                         </button>
                       )}
