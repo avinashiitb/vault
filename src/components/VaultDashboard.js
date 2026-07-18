@@ -419,10 +419,20 @@ const VaultDashboard = ({
                     </div>
 
                     <div className="item-secrets">
-                      <span className={`secret-pill font-mono ${isRevealed ? "revealed-pill" : ""}`}>
-                        {renderSecret(item.id, "password", item.fields.password)}
-                      </span>
-                      {isRevealed && (
+                      {item.fields.loginMethod && item.fields.loginMethod !== "password" ? (
+                        item.fields.loginMethod === "otp" ? (
+                          <span className="login-method-badge otp-badge">OTP Login</span>
+                        ) : item.fields.loginMethod === "google" ? (
+                          <span className="login-method-badge sso-google-badge"><i className="fa-brands fa-google"></i> Google SSO</span>
+                        ) : (
+                          <span className="login-method-badge sso-github-badge"><i className="fa-brands fa-github"></i> GitHub SSO</span>
+                        )
+                      ) : (
+                        <span className={`secret-pill font-mono ${isRevealed ? "revealed-pill" : ""}`}>
+                          {renderSecret(item.id, "password", item.fields.password)}
+                        </span>
+                      )}
+                      {(!item.fields.loginMethod || item.fields.loginMethod === "password") && isRevealed && (
                         <span className="reveal-countdown-timer">
                           hides in {countdown}s
                         </span>
@@ -440,9 +450,11 @@ const VaultDashboard = ({
                       <button className="row-action-btn view" onClick={() => onViewItem(item)} title="View Details">
                         <i className="fa-solid fa-eye"></i>
                       </button>
-                      <button className="row-action-btn copy" onClick={(e) => handleCopy(e, item.fields.password, "Password")} title="Copy Password">
-                        <i className="fa-solid fa-copy"></i>
-                      </button>
+                      {(!item.fields.loginMethod || item.fields.loginMethod === "password") && (
+                        <button className="row-action-btn copy" onClick={(e) => handleCopy(e, item.fields.password, "Password")} title="Copy Password">
+                          <i className="fa-solid fa-copy"></i>
+                        </button>
+                      )}
                     </div>
                   </div>
                 );

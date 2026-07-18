@@ -367,6 +367,34 @@
   color: var(--green-primary);
 }
 
+.login-method-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.otp-badge {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.sso-google-badge {
+  background-color: rgba(219, 68, 85, 0.1);
+  color: #db4437;
+  border: 1px solid rgba(219, 68, 85, 0.2);
+}
+
+.sso-github-badge {
+  background-color: rgba(110, 84, 148, 0.1);
+  color: #a78bfa;
+  border: 1px solid rgba(110, 84, 148, 0.2);
+}
+
 .reveal-countdown-timer {
   font-size: 11px;
   font-weight: 600;

@@ -117,6 +117,7 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
   const [username, setUsername] = useState(item?.fields?.username || "");
   const [password, setPassword] = useState(item?.fields?.password || "");
   const [url, setUrl] = useState(item?.fields?.url || "");
+  const [loginMethod, setLoginMethod] = useState(item?.fields?.loginMethod || "password");
 
   const [cardholder, setCardholder] = useState(item?.fields?.cardholder || "");
   const [cardNumber, setCardNumber] = useState(item?.fields?.cardNumber || "");
@@ -208,7 +209,7 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
 
     let fields = {};
     if (category === "website") {
-      fields = { username, password, url };
+      fields = { username, password: loginMethod === "password" ? password : "", url, loginMethod };
     } else if (category === "card") {
       fields = { cardholder, cardNumber, cardExpiry, cardCvv, cardPin };
     } else if (category === "bank") {
@@ -268,7 +269,14 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
               {category === "website" && (
                 <>
                   <ViewFieldRow label="Username / Email" value={username} />
-                  <ViewFieldRow label="Password" value={password} isSecret={true} />
+                  {loginMethod && loginMethod !== "password" ? (
+                    <ViewFieldRow
+                      label="Login Method"
+                      value={loginMethod === "otp" ? "OTP Login" : loginMethod === "google" ? "Google SSO" : "GitHub SSO"}
+                    />
+                  ) : (
+                    <ViewFieldRow label="Password" value={password} isSecret={true} />
+                  )}
                   <ViewFieldRow label="URL" value={url} />
                 </>
               )}
@@ -437,24 +445,55 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
                       onChange={(e) => setUsername(e.target.value)}
                     />
                   </div>
-                  <div className="form-group relative">
-                    <div className="label-row">
-                      <label>Password</label>
-                      <button
-                        type="button"
-                        className="text-btn"
-                        onClick={() => setShowGenerator(!showGenerator)}
-                      >
-                        {showGenerator ? "Hide Generator" : "Generate Password"}
-                      </button>
-                    </div>
-                    <input
-                      type="text"
-                      placeholder="Enter password..."
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
+                  <div className="form-group">
+                    <label>Login Method</label>
+                    <select
+                      value={loginMethod}
+                      onChange={(e) => {
+                        const method = e.target.value;
+                        setLoginMethod(method);
+                        if (method !== "password") {
+                          setShowGenerator(false);
+                        }
+                      }}
+                      style={{
+                        width: "100%",
+                        height: "40px",
+                        padding: "0 12px",
+                        borderRadius: "8px",
+                        border: "1px solid var(--border-color)",
+                        backgroundColor: "var(--bg-input)",
+                        color: "var(--text-primary)",
+                        fontSize: "13px",
+                        outline: "none"
+                      }}
+                    >
+                      <option value="password">Password</option>
+                      <option value="otp">OTP (One-Time Password)</option>
+                      <option value="google">SSO (Google)</option>
+                      <option value="github">SSO (GitHub)</option>
+                    </select>
                   </div>
+                  {loginMethod === "password" && (
+                    <div className="form-group relative">
+                      <div className="label-row">
+                        <label>Password</label>
+                        <button
+                          type="button"
+                          className="text-btn"
+                          onClick={() => setShowGenerator(!showGenerator)}
+                        >
+                          {showGenerator ? "Hide Generator" : "Generate Password"}
+                        </button>
+                      </div>
+                      <input
+                        type="text"
+                        placeholder="Enter password..."
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                      />
+                    </div>
+                  )}
                   <div className="form-group">
                     <label>Website URL (optional)</label>
                     <input
