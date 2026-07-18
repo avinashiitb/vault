@@ -21,6 +21,9 @@ const ViewFieldRow = ({ label, value, isSecret }) => {
 
   if (!value && !isSecret) return null; // Don't render empty optional fields
 
+  const isCvvOrPin = label && (label.toUpperCase() === "CVV" || label.toUpperCase() === "PIN");
+  const maskDots = isCvvOrPin ? "••••" : "••••••••••••";
+
   return (
     <div className="view-field-row" style={{
       display: "flex",
@@ -43,7 +46,7 @@ const ViewFieldRow = ({ label, value, isSecret }) => {
           whiteSpace: "nowrap",
           flex: 1
         }}>
-          {isSecret && !revealed ? "••••••••••••" : value || "—"}
+          {isSecret && !revealed ? maskDots : value || "—"}
         </span>
         <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
           {isSecret && (
