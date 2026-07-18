@@ -178,7 +178,7 @@
 .item-row {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 14px;
   padding: 11px 16px;
   border-top: 1px solid var(--border-color);
@@ -294,6 +294,8 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 12px;
+  flex: 1 1 0%;
+  min-width: 0;
 }
 
 .flex-row-fields {
