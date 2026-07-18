@@ -148,7 +148,34 @@ const VaultDashboard = ({
       return revealedVal;
     }
 
-    return "•••";
+    // 2. Default masked with preview fallback
+    if (secretType === "password" || secretType === "cardCvv" || secretType === "upiPin") {
+      if (secretType === "cardCvv") return "•••";
+      if (secretType === "upiPin") return "UPI PIN ••••";
+      return "••••••••••••";
+    }
+
+    const preview = previews[itemId]?.[secretType + "Preview"];
+    if (preview) {
+      if (secretType === "cardNumber") return `···· ···· ···· ${preview}`;
+      if (secretType === "cardExpiry") return `Exp ${preview}`;
+      if (secretType === "accountNumber") return `A/C ······${preview}`;
+      if (secretType === "ifscCode") return `IFSC ${preview}`;
+      if (secretType === "apiKeyValue") return `${preview}`;
+      if (secretType === "idNumber") return `${preview}`;
+      if (secretType === "envContent") return `env ${preview}`;
+    }
+
+    // Static fallback if preview isn't loaded yet
+    if (secretType === "cardNumber") return "···· ···· ···· 4242";
+    if (secretType === "cardExpiry") return "Exp 09/27";
+    if (secretType === "accountNumber") return "A/C ······6641";
+    if (secretType === "ifscCode") return "IFSC HDFC000••••";
+    if (secretType === "apiKeyValue") return "ghp_••••••••••••";
+    if (secretType === "idNumber") return "Z••••••93";
+    if (secretType === "envContent") return "env ••••••••";
+
+    return "••••••••";
   };
 
   // Helper to determine custom fields display limit
@@ -205,7 +232,7 @@ const VaultDashboard = ({
           }}
           title="Click to view all fields"
         >
-          ...
+          •••
         </span>
       );
     }
@@ -741,175 +768,174 @@ const VaultDashboard = ({
           </div>
         )}
 
-        {/* API KEYS SECTION */}
-        {apikeys.length > 0 && (
-          <div className="category-group">
-            <div className="category-title">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
-              </svg>
-              API Keys / Credentials · {apikeys.length}
-            </div>
-
-            <div className="category-card-list">
-              {apikeys.slice(0, expandedSections.apikey ? apikeys.length : 3).map((item) => (
-                <div key={item.id} className="item-row">
-                  <div className="item-avatar font-bold" style={{ background: "rgba(59, 130, 246, 0.1)", color: "#3b82f6" }}>
-                    <i className="fa-solid fa-key" style={{ fontSize: "12px" }}></i>
-                  </div>
-                  <div className="item-info">
-                    <span className="item-name-title">{item.title}</span>
-                    <span className="item-sub-title">{item.fields.keyScope}</span>
-                  </div>
-
-                  <div className="item-secrets">
-                    <span className="secret-pill font-mono">
-                      {renderSecret(item.id, "apiKeyValue", item.fields.apiKeyValue)}
-                    </span>
-                    {renderCustomFieldsInline(item)}
-                  </div>
-
-                  <div className="item-hover-actions">
-                    <button className="row-action-btn edit" onClick={() => onEditItem(item)} title="Edit Item">
-                      <i className="fa-solid fa-pen"></i>
-                    </button>
-                    <button className="row-action-btn delete" onClick={() => onDeleteItem(item.id)} title="Delete Item">
-                      <i className="fa-solid fa-trash"></i>
-                    </button>
-                  </div>
-
-                  <div className="item-row-actions">
-                    <button
-                      className="action-icon-btn"
-                      onClick={() => onViewItem(item)}
-                      title="View Details"
-                      style={{ marginRight: "6px" }}
-                    >
-                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
-                      </svg>
-                    </button>
-                    <button
-                      className="action-icon-btn"
-                      onClick={(e) => handleCopy(e, item.fields.apiKeyValue, "API Key")}
-                      title="Copy Key"
-                    >
-                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <rect x="9" y="9" width="13" height="13" rx="2"></rect>
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                      </svg>
-                    </button>
-                  </div>
+        {/* BOTTOM ROW GRID (API KEYS & IDENTITIES) */}
+        {(apikeys.length > 0 || identities.length > 0) && (
+          <div className="dashboard-grid-row">
+            {/* API KEYS (LEFT COL) */}
+            {apikeys.length > 0 && (
+              <div className="grid-column">
+                <div className="category-title">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
+                  </svg>
+                  API Keys / Credentials · {apikeys.length}
                 </div>
-              ))}
-            </div>
-            {apikeys.length > 3 && (
-              <div className="section-expand-container">
-                <button className="section-expand-btn" onClick={() => toggleSection("apikey")}>
-                  {expandedSections.apikey ? (
-                    <>
-                      <i className="fa-solid fa-chevron-up"></i> Show less
-                    </>
-                  ) : (
-                    <>
-                      <i className="fa-solid fa-ellipsis"></i> Show {apikeys.length - 3} more
-                    </>
-                  )}
-                </button>
+
+                <div className="category-card-list">
+                  {apikeys.slice(0, expandedSections.apikey ? apikeys.length : 3).map((item) => (
+                    <div key={item.id} className="item-row grid-item-row">
+                      <div className="item-info">
+                        <span className="item-name-title">{item.title}</span>
+                        <span className="item-sub-title">{item.fields.keyScope}</span>
+                      </div>
+
+                      <div className="item-secrets">
+                        <span className="secret-pill font-mono">
+                          {renderSecret(item.id, "apiKeyValue", item.fields.apiKeyValue)}
+                        </span>
+                        {renderCustomFieldsInline(item)}
+                      </div>
+
+                      <div className="item-hover-actions">
+                        <button className="row-action-btn edit" onClick={() => onEditItem(item)} title="Edit Item">
+                          <i className="fa-solid fa-pen"></i>
+                        </button>
+                        <button className="row-action-btn delete" onClick={() => onDeleteItem(item.id)} title="Delete Item">
+                          <i className="fa-solid fa-trash"></i>
+                        </button>
+                      </div>
+
+                      <div className="item-row-actions">
+                        <button
+                          className="action-icon-btn"
+                          onClick={() => onViewItem(item)}
+                          title="View Details"
+                          style={{ marginRight: "6px" }}
+                        >
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                          </svg>
+                        </button>
+                        <button
+                          className="action-icon-btn"
+                          onClick={(e) => handleCopy(e, item.fields.apiKeyValue, "API Key")}
+                          title="Copy Key"
+                        >
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                {apikeys.length > 3 && (
+                  <div className="section-expand-container">
+                    <button className="section-expand-btn" onClick={() => toggleSection("apikey")}>
+                      {expandedSections.apikey ? (
+                        <>
+                          <i className="fa-solid fa-chevron-up"></i> Show less
+                        </>
+                      ) : (
+                        <>
+                          <i className="fa-solid fa-ellipsis"></i> Show {apikeys.length - 3} more
+                        </>
+                      )}
+                    </button>
+                  </div>
+                )}
               </div>
             )}
-          </div>
-        )}
 
-        {/* IDENTITY SECTION */}
-        {identities.length > 0 && (
-          <div className="category-group">
-            <div className="category-title">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="4" width="18" height="16" rx="2"></rect>
-                <circle cx="9" cy="10" r="2"></circle>
-                <path d="M15 8h4"></path>
-                <path d="M15 12h4"></path>
-                <path d="M5 18c.8-1.5 2.2-2.5 4-2.5s3.2 1 4 2.5"></path>
-              </svg>
-              Identity · {identities.length}
-            </div>
+            {/* IDENTITY (RIGHT COL) */}
+            {identities.length > 0 && (
+              <div className="grid-column">
+                <div className="category-title">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+                    <circle cx="9" cy="10" r="2"></circle>
+                    <path d="M15 8h4"></path>
+                    <path d="M15 12h4"></path>
+                    <path d="M5 18c.8-1.5 2.2-2.5 4-2.5s3.2 1 4 2.5"></path>
+                  </svg>
+                  Identity · {identities.length}
+                </div>
 
-            <div className="category-card-list">
-              {identities.slice(0, expandedSections.identity ? identities.length : 3).map((item) => {
-                const isRevealed = revealedSecrets[item.id]?.idNumber !== undefined;
-                const countdown = revealedCountdowns[`${item.id}_idNumber`] || 0;
-                return (
-                  <div key={item.id} className="item-row">
-                    <div className="item-avatar font-bold" style={{ background: "rgba(16, 185, 129, 0.1)", color: "#10b981" }}>
-                      <i className="fa-solid fa-id-card" style={{ fontSize: "12px" }}></i>
-                    </div>
-                    <div className="item-info">
-                      <span className="item-name-title">{item.title}</span>
-                      <span className="item-sub-title">{item.fields.idSub}</span>
-                    </div>
+                <div className="category-card-list">
+                  {identities.slice(0, expandedSections.identity ? identities.length : 3).map((item) => {
+                    const isRevealed = revealedSecrets[item.id]?.idNumber !== undefined;
+                    const countdown = revealedCountdowns[`${item.id}_idNumber`] || 0;
+                    return (
+                      <div key={item.id} className="item-row grid-item-row">
+                        <div className="item-info">
+                          <span className="item-name-title">{item.title}</span>
+                          <span className="item-sub-title">{item.fields.idSub}</span>
+                        </div>
 
-                    <div className="item-secrets">
-                      <span className="secret-pill font-mono">
-                        {renderSecret(item.id, "idNumber", item.fields.idNumber)}
-                      </span>
-                      {isRevealed && (
-                        <span className="reveal-countdown-timer">
-                          {countdown}s
-                        </span>
+                        <div className="item-secrets">
+                          <span className="secret-pill font-mono">
+                            {renderSecret(item.id, "idNumber", item.fields.idNumber)}
+                          </span>
+                          {isRevealed && (
+                            <span className="reveal-countdown-timer position-absolute">
+                              {countdown}s
+                            </span>
+                          )}
+                          {renderCustomFieldsInline(item)}
+                        </div>
+
+                        <div className="item-hover-actions">
+                          <button className="row-action-btn edit" onClick={() => onEditItem(item)} title="Edit Item">
+                            <i className="fa-solid fa-pen"></i>
+                          </button>
+                          <button className="row-action-btn delete" onClick={() => onDeleteItem(item.id)} title="Delete Item">
+                            <i className="fa-solid fa-trash"></i>
+                          </button>
+                        </div>
+
+                        <div className="item-row-actions">
+                          <button
+                            className="action-icon-btn"
+                            onClick={() => onViewItem(item)}
+                            title="View Details"
+                          >
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                              <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                          </button>
+                          <button
+                            className="action-icon-btn"
+                            onClick={(e) => handleCopy(e, item.fields.idNumber, "ID Number")}
+                            title="Copy ID"
+                          >
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+                              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                {identities.length > 3 && (
+                  <div className="section-expand-container">
+                    <button className="section-expand-btn" onClick={() => toggleSection("identity")}>
+                      {expandedSections.identity ? (
+                        <>
+                          <i className="fa-solid fa-chevron-up"></i> Show less
+                        </>
+                      ) : (
+                        <>
+                          <i className="fa-solid fa-ellipsis"></i> Show {identities.length - 3} more
+                        </>
                       )}
-                      {renderCustomFieldsInline(item)}
-                    </div>
-
-                    <div className="item-hover-actions">
-                      <button className="row-action-btn edit" onClick={() => onEditItem(item)} title="Edit Item">
-                        <i className="fa-solid fa-pen"></i>
-                      </button>
-                      <button className="row-action-btn delete" onClick={() => onDeleteItem(item.id)} title="Delete Item">
-                        <i className="fa-solid fa-trash"></i>
-                      </button>
-                    </div>
-
-                    <div className="item-row-actions">
-                      <button
-                        className="action-icon-btn"
-                        onClick={() => onViewItem(item)}
-                        title="View Details"
-                      >
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                          <circle cx="12" cy="12" r="3"></circle>
-                        </svg>
-                      </button>
-                      <button
-                        className="action-icon-btn"
-                        onClick={(e) => handleCopy(e, item.fields.idNumber, "ID Number")}
-                        title="Copy ID"
-                      >
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <rect x="9" y="9" width="13" height="13" rx="2"></rect>
-                          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                        </svg>
-                      </button>
-                    </div>
+                    </button>
                   </div>
-                );
-              })}
-            </div>
-            {identities.length > 3 && (
-              <div className="section-expand-container">
-                <button className="section-expand-btn" onClick={() => toggleSection("identity")}>
-                  {expandedSections.identity ? (
-                    <>
-                      <i className="fa-solid fa-chevron-up"></i> Show less
-                    </>
-                  ) : (
-                    <>
-                      <i className="fa-solid fa-ellipsis"></i> Show {identities.length - 3} more
-                    </>
-                  )}
-                </button>
+                )}
               </div>
             )}
           </div>
