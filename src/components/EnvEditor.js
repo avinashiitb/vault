@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Editor from "@monaco-editor/react";
 import "./EnvEditor.css";
 
-const EnvEditor = ({ mode, item, onSave, onClose }) => {
+const EnvEditor = ({ mode, item, theme, onSave, onClose }) => {
   const [editorMode, setEditorMode] = useState(mode); // "add", "edit", "view"
   const [title, setTitle] = useState(item?.title || "Untitled Env");
   const [content, setContent] = useState(item?.fields?.envContent || "");
@@ -29,7 +29,7 @@ const EnvEditor = ({ mode, item, onSave, onClose }) => {
   };
 
   return (
-    <div className="env-editor-page">
+    <div className={`env-editor-page ${theme}-theme`}>
       {/* Top Header Bar */}
       <div className="env-editor-header">
         <div className="header-left">
@@ -101,7 +101,7 @@ const EnvEditor = ({ mode, item, onSave, onClose }) => {
         <Editor
           height="100%"
           defaultLanguage="ini"
-          theme="vs-dark"
+          theme={theme === "dark" ? "vs-dark" : "vs"}
           value={content}
           onChange={(val) => setContent(val || "")}
           options={{

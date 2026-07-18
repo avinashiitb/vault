@@ -825,6 +825,7 @@ function App() {
         <EnvEditor
           mode={envEditorState.type}
           item={envEditorState.item}
+          theme={theme}
           onSave={async (data) => {
             await handleSaveItem(data);
             setEnvEditorState(null);
