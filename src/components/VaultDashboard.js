@@ -225,7 +225,7 @@ const VaultDashboard = ({
         <span
           key="more-dots"
           className="secret-pill font-mono"
-          style={{ opacity: 0.5, cursor: "pointer", display: "inline-flex", alignItems: "center" }}
+          style={{ cursor: "pointer", display: "inline-flex", alignItems: "center" }}
           onClick={(e) => {
             e.stopPropagation();
             onViewItem(item);
