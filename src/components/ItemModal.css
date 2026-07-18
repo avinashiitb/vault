@@ -340,3 +340,23 @@
     transform: translateY(0);
   }
 }
+
+/* Custom Field Input styling to match other forms */
+.custom-fields-section input[type="text"] {
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-input);
+  color: var(--text-primary);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-sizing: border-box;
+}
+
+.custom-fields-section input[type="text"]:focus {
+  border-color: var(--green-primary);
+  box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.12);
+}
+

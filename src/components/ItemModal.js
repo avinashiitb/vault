@@ -745,7 +745,7 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
                           placeholder="Field Name (e.g. Netbanking Password)"
                           value={field.name}
                           onChange={(e) => handleCustomFieldChange(field.id, "name", e.target.value)}
-                          style={{ flex: 1, padding: "8px 12px", fontSize: "12px" }}
+                          style={{ flex: 1 }}
                           required
                         />
                         <input
@@ -753,7 +753,7 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
                           placeholder="Field Value"
                           value={field.value}
                           onChange={(e) => handleCustomFieldChange(field.id, "value", e.target.value)}
-                          style={{ flex: 2, padding: "8px 12px", fontSize: "12px" }}
+                          style={{ flex: 2 }}
                           required
                         />
                         <button
