@@ -7,6 +7,7 @@ const CATEGORIES = [
   { value: "bank", label: "Bank Account" },
   { value: "apikey", label: "API Key / Credentials" },
   { value: "identity", label: "Identity Document" },
+  { value: "env", label: "Environment Variables" },
 ];
 
 const ViewFieldRow = ({ label, value, isSecret }) => {
@@ -130,6 +131,10 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
   const [idSub, setIdSub] = useState(item?.fields?.idSub || "");
   const [idNumber, setIdNumber] = useState(item?.fields?.idNumber || "");
 
+  // Env specific fields
+  const [envContent, setEnvContent] = useState(item?.fields?.envContent || "");
+  const [copiedEnv, setCopiedEnv] = useState(false);
+
   // Custom Fields states
   const [customFields, setCustomFields] = useState(item?.fields?.customFields || []);
 
@@ -208,6 +213,8 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
       fields = { keyScope, apiKeyValue };
     } else if (category === "identity") {
       fields = { idSub, idNumber };
+    } else if (category === "env") {
+      fields = { envContent };
     }
 
     // Filter and append custom fields
@@ -302,6 +309,66 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
                 </>
               )}
 
+              {/* ENVIRONMENT VARIABLES VIEW */}
+              {category === "env" && (
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "12px" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span style={{ fontSize: "11px", color: "var(--text-secondary)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                      Environment Variables
+                    </span>
+                    <button
+                      type="button"
+                      className="action-icon-btn"
+                      onClick={() => {
+                        navigator.clipboard.writeText(envContent || "");
+                        setCopiedEnv(true);
+                        setTimeout(() => setCopiedEnv(false), 2000);
+                      }}
+                      style={{
+                        padding: "4px 8px",
+                        background: copiedEnv ? "rgba(34, 197, 94, 0.1)" : "rgba(255, 255, 255, 0.02)",
+                        border: "1px solid " + (copiedEnv ? "#22c55e" : "var(--border-color)"),
+                        borderRadius: "4px",
+                        cursor: "pointer",
+                        color: copiedEnv ? "#22c55e" : "var(--text-secondary)",
+                        fontSize: "11px",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "4px",
+                        transition: "all 0.15s ease"
+                      }}
+                    >
+                      {copiedEnv ? (
+                        <>
+                          <i className="fa-solid fa-check"></i> Copied
+                        </>
+                      ) : (
+                        <>
+                          <i className="fa-solid fa-copy"></i> Copy Block
+                        </>
+                      )}
+                    </button>
+                  </div>
+                  <pre style={{
+                    margin: 0,
+                    padding: "14px 16px",
+                    background: "rgba(0, 0, 0, 0.25)",
+                    border: "1px solid var(--border-color)",
+                    borderRadius: "8px",
+                    color: "#a7f3d0",
+                    fontFamily: "var(--font-mono, monospace)",
+                    fontSize: "12px",
+                    lineHeight: "1.6",
+                    whiteSpace: "pre-wrap",
+                    wordBreak: "break-all",
+                    maxHeight: "300px",
+                    overflowY: "auto"
+                  }}>
+                    {envContent || "—"}
+                  </pre>
+                </div>
+              )}
+
               {/* CUSTOM FIELDS VIEW */}
               {customFields.length > 0 && (
                 <div style={{ marginTop: "16px", paddingTop: "14px", borderTop: "1px dashed var(--border-color)" }}>
@@ -342,7 +409,8 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
                       category === "website" ? "github.com" :
                       category === "card" ? "Visa Platinum" :
                       category === "bank" ? "HDFC Savings" :
-                      category === "apikey" ? "GitHub PAT" : "Passport"
+                      category === "apikey" ? "GitHub PAT" :
+                      category === "env" ? "Production Env" : "Passport"
                     }
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
@@ -535,6 +603,34 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
                       placeholder="Z••••••93"
                       value={idNumber}
                       onChange={(e) => setIdNumber(e.target.value)}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* ENVIRONMENT VARIABLES FIELDS */}
+              {category === "env" && (
+                <div className="category-fields">
+                  <div className="form-group">
+                    <label>Environment Variables (Code Block)</label>
+                    <textarea
+                      placeholder="KEY=value&#10;ANOTHER_KEY=another_value"
+                      value={envContent}
+                      onChange={(e) => setEnvContent(e.target.value)}
+                      rows={10}
+                      style={{
+                        fontFamily: "var(--font-mono, monospace)",
+                        fontSize: "12px",
+                        background: "rgba(0, 0, 0, 0.2)",
+                        color: "var(--text-primary)",
+                        border: "1px solid var(--border-color)",
+                        borderRadius: "6px",
+                        padding: "10px 12px",
+                        width: "100%",
+                        boxSizing: "border-box",
+                        resize: "vertical",
+                        lineHeight: "1.5"
+                      }}
                     />
                   </div>
                 </div>

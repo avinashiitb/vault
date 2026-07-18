@@ -147,6 +147,7 @@ const VaultDashboard = ({
       if (secretType === "ifscCode") return `IFSC ${preview}`;
       if (secretType === "apiKeyValue") return `${preview}`;
       if (secretType === "idNumber") return `${preview}`;
+      if (secretType === "envContent") return `env ${preview}`;
     }
 
     // Static fallback if preview isn't loaded yet
@@ -156,6 +157,7 @@ const VaultDashboard = ({
     if (secretType === "ifscCode") return "IFSC HDFC000••••";
     if (secretType === "apiKeyValue") return "ghp_••••••••••••";
     if (secretType === "idNumber") return "Z••••••93";
+    if (secretType === "envContent") return "env ••••••••";
 
     return "••••••••";
   };
@@ -254,6 +256,7 @@ const VaultDashboard = ({
   const banks = filteredItems.filter((i) => i.category === "bank");
   const apikeys = filteredItems.filter((i) => i.category === "apikey");
   const identities = filteredItems.filter((i) => i.category === "identity");
+  const envs = filteredItems.filter((i) => i.category === "env");
 
   return (
     <div className="dashboard-layout">
@@ -614,6 +617,78 @@ const VaultDashboard = ({
                         className="action-icon-btn"
                         onClick={(e) => handleCopy(e, item.fields.accountNumber, "Account Number")}
                         title="Copy Account Number"
+                      >
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+                          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                      </button>
+                    </div>
+                    {renderCustomFieldsSection(item)}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* ENVIRONMENT VARIABLES SECTION */}
+        {envs.length > 0 && (
+          <div className="category-group">
+            <div className="category-title">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="16 18 22 12 16 6"></polyline>
+                <polyline points="8 6 2 12 8 18"></polyline>
+              </svg>
+              Environment Variables · {envs.length}
+            </div>
+
+            <div className="category-card-list">
+              {envs.map((item) => {
+                const count = item.fields.envContent ? item.fields.envContent.split("\n").filter(line => line.trim() && !line.trim().startsWith("#")).length : 0;
+                return (
+                  <div key={item.id} className="item-row">
+                    <div className="item-avatar-circle" style={{ background: "rgba(16, 185, 129, 0.1)", color: "#10b981" }}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="16 18 22 12 16 6"></polyline>
+                        <polyline points="8 6 2 12 8 18"></polyline>
+                      </svg>
+                    </div>
+                    <div className="item-info">
+                      <span className="item-name-title">{item.title}</span>
+                      <span className="item-sub-title">{count} variable{count !== 1 ? "s" : ""}</span>
+                    </div>
+
+                    <div className="item-secrets">
+                      <span className="secret-pill font-mono" style={{ background: "rgba(16, 185, 129, 0.05)", color: "#10b981" }}>
+                        {renderSecret(item.id, "envContent", item.fields.envContent)}
+                      </span>
+                    </div>
+
+                    <div className="item-hover-actions">
+                      <button className="row-action-btn edit" onClick={() => onEditItem(item)} title="Edit Item">
+                        <i className="fa-solid fa-pen"></i>
+                      </button>
+                      <button className="row-action-btn delete" onClick={() => onDeleteItem(item.id)} title="Delete Item">
+                        <i className="fa-solid fa-trash"></i>
+                      </button>
+                    </div>
+
+                    <div className="item-row-actions">
+                      <button
+                        className="action-icon-btn"
+                        onClick={() => onViewItem(item)}
+                        title="View Details"
+                      >
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                          <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                      </button>
+                      <button
+                        className="action-icon-btn"
+                        onClick={(e) => handleCopy(e, item.fields.envContent, "Environment Variables")}
+                        title="Copy Env Block"
                       >
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                           <rect x="9" y="9" width="13" height="13" rx="2"></rect>

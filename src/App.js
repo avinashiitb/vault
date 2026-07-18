@@ -449,6 +449,7 @@ function App() {
       bank: ["accountNumber", "ifscCode", "upiPin"],
       apikey: ["apiKeyValue"],
       identity: ["idNumber"],
+      env: ["envContent"],
     };
 
     const sensitives = sensitiveFieldsMap[item.category] || [];
@@ -514,6 +515,7 @@ function App() {
       bank: ["accountNumber", "ifscCode", "upiPin"],
       apikey: ["apiKeyValue"],
       identity: ["idNumber"],
+      env: ["envContent"],
     };
 
     const sensitives = sensitiveFieldsMap[item.category] || [];
@@ -583,6 +585,7 @@ function App() {
       bank: ["accountNumber", "ifscCode", "upiPin"],
       apikey: ["apiKeyValue"],
       identity: ["idNumber"],
+      env: ["envContent"],
     };
 
     const sensitives = sensitiveFieldsMap[modalData.category] || [];
@@ -648,6 +651,10 @@ function App() {
       const pId = modalData.fields.idNumber ? modalData.fields.idNumber.charAt(0) + "••••" + modalData.fields.idNumber.slice(-2) : "";
       encryptedFields.idNumberPreview = pId;
       itemPreviews.idNumberPreview = pId;
+    } else if (modalData.category === "env") {
+      const pEnv = modalData.fields.envContent ? modalData.fields.envContent.substring(0, 10).replace(/\r?\n/g, " ") + "••••" : "";
+      encryptedFields.envContentPreview = pEnv;
+      itemPreviews.envContentPreview = pEnv;
     }
 
     const newItemEncryptedObj = {
