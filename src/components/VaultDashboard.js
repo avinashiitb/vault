@@ -410,30 +410,12 @@ const VaultDashboard = ({
                     key={item.id}
                     className={`item-row ${isRevealed ? "revealed-bg" : ""}`}
                   >
-                    <div className="item-card-header">
-                      <div className="item-card-header-left">
-                        <div className="item-avatar font-bold">
-                          {item.title ? item.title.charAt(0).toUpperCase() : "W"}
-                        </div>
-                        <div className="item-info">
-                          <span className="item-name-title">{item.title}</span>
-                          <span className="item-sub-title">{item.fields.username}</span>
-                        </div>
-                      </div>
-                      <div className="item-card-actions">
-                        <button className="row-action-btn edit" onClick={() => onEditItem(item)} title="Edit Item">
-                          <i className="fa-solid fa-pen"></i>
-                        </button>
-                        <button className="row-action-btn delete" onClick={() => onDeleteItem(item.id)} title="Delete Item">
-                          <i className="fa-solid fa-trash"></i>
-                        </button>
-                        <button className="row-action-btn view" onClick={() => onViewItem(item)} title="View Details">
-                          <i className="fa-solid fa-eye"></i>
-                        </button>
-                        <button className="row-action-btn copy" onClick={(e) => handleCopy(e, item.fields.password, "Password")} title="Copy Password">
-                          <i className="fa-solid fa-copy"></i>
-                        </button>
-                      </div>
+                    <div className="item-avatar font-bold">
+                      {item.title ? item.title.charAt(0).toUpperCase() : "W"}
+                    </div>
+                    <div className="item-info">
+                      <span className="item-name-title">{item.title}</span>
+                      <span className="item-sub-title">{item.fields.username}</span>
                     </div>
 
                     <div className="item-secrets">
@@ -446,6 +428,21 @@ const VaultDashboard = ({
                         </span>
                       )}
                       {renderCustomFieldsInline(item)}
+                    </div>
+
+                    <div className="item-card-actions">
+                      <button className="row-action-btn edit" onClick={() => onEditItem(item)} title="Edit Item">
+                        <i className="fa-solid fa-pen"></i>
+                      </button>
+                      <button className="row-action-btn delete" onClick={() => onDeleteItem(item.id)} title="Delete Item">
+                        <i className="fa-solid fa-trash"></i>
+                      </button>
+                      <button className="row-action-btn view" onClick={() => onViewItem(item)} title="View Details">
+                        <i className="fa-solid fa-eye"></i>
+                      </button>
+                      <button className="row-action-btn copy" onClick={(e) => handleCopy(e, item.fields.password, "Password")} title="Copy Password">
+                        <i className="fa-solid fa-copy"></i>
+                      </button>
                     </div>
                   </div>
                 );
@@ -490,28 +487,10 @@ const VaultDashboard = ({
 
                 return (
                   <div key={item.id} className="item-row">
-                    <div className="item-card-header">
-                      <div className="item-card-header-left">
-                        <div className={`card-badge-avatar ${cardClass}`}>{cardTypeLabel}</div>
-                        <div className="item-info">
-                          <span className="item-name-title">{item.title}</span>
-                          <span className="item-sub-title">{item.fields.cardholder}</span>
-                        </div>
-                      </div>
-                      <div className="item-card-actions">
-                        <button className="row-action-btn edit" onClick={() => onEditItem(item)} title="Edit Item">
-                          <i className="fa-solid fa-pen"></i>
-                        </button>
-                        <button className="row-action-btn delete" onClick={() => onDeleteItem(item.id)} title="Delete Item">
-                          <i className="fa-solid fa-trash"></i>
-                        </button>
-                        <button className="row-action-btn view" onClick={() => onViewItem(item)} title="View Details">
-                          <i className="fa-solid fa-eye"></i>
-                        </button>
-                        <button className="row-action-btn copy" onClick={(e) => handleCopy(e, item.fields.cardNumber, "Card Number")} title="Copy Card Number">
-                          <i className="fa-solid fa-copy"></i>
-                        </button>
-                      </div>
+                    <div className={`card-badge-avatar ${cardClass}`}>{cardTypeLabel}</div>
+                    <div className="item-info">
+                      <span className="item-name-title">{item.title}</span>
+                      <span className="item-sub-title">{item.fields.cardholder}</span>
                     </div>
 
                     <div className="item-secrets flex-row-fields">
@@ -530,6 +509,21 @@ const VaultDashboard = ({
                         </span>
                       )}
                       {renderCustomFieldsInline(item)}
+                    </div>
+
+                    <div className="item-card-actions">
+                      <button className="row-action-btn edit" onClick={() => onEditItem(item)} title="Edit Item">
+                        <i className="fa-solid fa-pen"></i>
+                      </button>
+                      <button className="row-action-btn delete" onClick={() => onDeleteItem(item.id)} title="Delete Item">
+                        <i className="fa-solid fa-trash"></i>
+                      </button>
+                      <button className="row-action-btn view" onClick={() => onViewItem(item)} title="View Details">
+                        <i className="fa-solid fa-eye"></i>
+                      </button>
+                      <button className="row-action-btn copy" onClick={(e) => handleCopy(e, item.fields.cardNumber, "Card Number")} title="Copy Card Number">
+                        <i className="fa-solid fa-copy"></i>
+                      </button>
                     </div>
                   </div>
                 );
@@ -571,8 +565,6 @@ const VaultDashboard = ({
                 const countdown = revealedCountdowns[`${item.id}_accountNumber`] || 0;
                 return (
                   <div key={item.id} className="item-row">
-                    <div className="item-card-header">
-                      <div className="item-card-header-left">
                         <div className="item-avatar-circle">
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M3 21h18"></path>
@@ -583,22 +575,6 @@ const VaultDashboard = ({
                           <span className="item-name-title">{item.title}</span>
                           <span className="item-sub-title">{item.fields.bankSub}</span>
                         </div>
-                      </div>
-                      <div className="item-card-actions">
-                        <button className="row-action-btn edit" onClick={() => onEditItem(item)} title="Edit Item">
-                          <i className="fa-solid fa-pen"></i>
-                        </button>
-                        <button className="row-action-btn delete" onClick={() => onDeleteItem(item.id)} title="Delete Item">
-                          <i className="fa-solid fa-trash"></i>
-                        </button>
-                        <button className="row-action-btn view" onClick={() => onViewItem(item)} title="View Details">
-                          <i className="fa-solid fa-eye"></i>
-                        </button>
-                        <button className="row-action-btn copy" onClick={(e) => handleCopy(e, item.fields.accountNumber, "Account Number")} title="Copy Account Number">
-                          <i className="fa-solid fa-copy"></i>
-                        </button>
-                      </div>
-                    </div>
 
                     <div className="item-secrets flex-row-fields">
                       <span className="secret-pill font-mono">
@@ -616,6 +592,21 @@ const VaultDashboard = ({
                         </span>
                       )}
                       {renderCustomFieldsInline(item)}
+                    </div>
+
+                    <div className="item-card-actions">
+                      <button className="row-action-btn edit" onClick={() => onEditItem(item)} title="Edit Item">
+                        <i className="fa-solid fa-pen"></i>
+                      </button>
+                      <button className="row-action-btn delete" onClick={() => onDeleteItem(item.id)} title="Delete Item">
+                        <i className="fa-solid fa-trash"></i>
+                      </button>
+                      <button className="row-action-btn view" onClick={() => onViewItem(item)} title="View Details">
+                        <i className="fa-solid fa-eye"></i>
+                      </button>
+                      <button className="row-action-btn copy" onClick={(e) => handleCopy(e, item.fields.accountNumber, "Account Number")} title="Copy Account Number">
+                        <i className="fa-solid fa-copy"></i>
+                      </button>
                     </div>
                   </div>
                 );
@@ -655,33 +646,15 @@ const VaultDashboard = ({
                 const count = item.fields.envContent ? item.fields.envContent.split("\n").filter(line => line.trim() && !line.trim().startsWith("#")).length : 0;
                 return (
                   <div key={item.id} className="item-row">
-                    <div className="item-card-header">
-                      <div className="item-card-header-left">
-                        <div className="item-avatar-circle" style={{ background: "rgba(16, 185, 129, 0.1)", color: "#10b981" }}>
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                            <polyline points="16 18 22 12 16 6"></polyline>
-                            <polyline points="8 6 2 12 8 18"></polyline>
-                          </svg>
-                        </div>
-                        <div className="item-info">
-                          <span className="item-name-title">{item.title}</span>
-                          <span className="item-sub-title">{count} variable{count !== 1 ? "s" : ""}</span>
-                        </div>
-                      </div>
-                      <div className="item-card-actions">
-                        <button className="row-action-btn edit" onClick={() => onEditItem(item)} title="Edit Item">
-                          <i className="fa-solid fa-pen"></i>
-                        </button>
-                        <button className="row-action-btn delete" onClick={() => onDeleteItem(item.id)} title="Delete Item">
-                          <i className="fa-solid fa-trash"></i>
-                        </button>
-                        <button className="row-action-btn view" onClick={() => onViewItem(item)} title="View Details">
-                          <i className="fa-solid fa-eye"></i>
-                        </button>
-                        <button className="row-action-btn copy" onClick={(e) => handleCopy(e, item.fields.envContent, "Environment Variables")} title="Copy Env Block">
-                          <i className="fa-solid fa-copy"></i>
-                        </button>
-                      </div>
+                    <div className="item-avatar-circle" style={{ background: "rgba(16, 185, 129, 0.1)", color: "#10b981" }}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="16 18 22 12 16 6"></polyline>
+                        <polyline points="8 6 2 12 8 18"></polyline>
+                      </svg>
+                    </div>
+                    <div className="item-info">
+                      <span className="item-name-title">{item.title}</span>
+                      <span className="item-sub-title">{count} variable{count !== 1 ? "s" : ""}</span>
                     </div>
 
                     <div className="item-secrets">
@@ -689,6 +662,21 @@ const VaultDashboard = ({
                         {renderSecret(item.id, "envContent", item.fields.envContent)}
                       </span>
                       {renderCustomFieldsInline(item)}
+                    </div>
+
+                    <div className="item-card-actions">
+                      <button className="row-action-btn edit" onClick={() => onEditItem(item)} title="Edit Item">
+                        <i className="fa-solid fa-pen"></i>
+                      </button>
+                      <button className="row-action-btn delete" onClick={() => onDeleteItem(item.id)} title="Delete Item">
+                        <i className="fa-solid fa-trash"></i>
+                      </button>
+                      <button className="row-action-btn view" onClick={() => onViewItem(item)} title="View Details">
+                        <i className="fa-solid fa-eye"></i>
+                      </button>
+                      <button className="row-action-btn copy" onClick={(e) => handleCopy(e, item.fields.envContent, "Environment Variables")} title="Copy Env Block">
+                        <i className="fa-solid fa-copy"></i>
+                      </button>
                     </div>
                   </div>
                 );
@@ -725,18 +713,23 @@ const VaultDashboard = ({
             <div className="category-card-list">
               {apikeys.slice(0, expandedSections.apikey ? apikeys.length : 3).map((item) => (
                 <div key={item.id} className="item-row">
-                  <div className="item-card-header">
-                    <div className="item-card-header-left">
-                      <div className="item-avatar-circle">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
-                        </svg>
-                      </div>
-                      <div className="item-info">
-                        <span className="item-name-title">{item.title}</span>
-                        <span className="item-sub-title">{item.fields.keyScope}</span>
-                      </div>
+                    <div className="item-avatar-circle">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
+                      </svg>
                     </div>
+                    <div className="item-info">
+                      <span className="item-name-title">{item.title}</span>
+                      <span className="item-sub-title">{item.fields.keyScope}</span>
+                    </div>
+
+                    <div className="item-secrets">
+                      <span className="secret-pill font-mono">
+                        {renderSecret(item.id, "apiKeyValue", item.fields.apiKeyValue)}
+                      </span>
+                      {renderCustomFieldsInline(item)}
+                    </div>
+
                     <div className="item-card-actions">
                       <button className="row-action-btn edit" onClick={() => onEditItem(item)} title="Edit Item">
                         <i className="fa-solid fa-pen"></i>
@@ -751,14 +744,6 @@ const VaultDashboard = ({
                         <i className="fa-solid fa-copy"></i>
                       </button>
                     </div>
-                  </div>
-
-                  <div className="item-secrets">
-                    <span className="secret-pill font-mono">
-                      {renderSecret(item.id, "apiKeyValue", item.fields.apiKeyValue)}
-                    </span>
-                    {renderCustomFieldsInline(item)}
-                  </div>
                 </div>
               ))}
             </div>
@@ -800,36 +785,18 @@ const VaultDashboard = ({
                 const countdown = revealedCountdowns[`${item.id}_idNumber`] || 0;
                 return (
                   <div key={item.id} className="item-row">
-                    <div className="item-card-header">
-                      <div className="item-card-header-left">
-                        <div className="item-avatar-circle">
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                            <rect x="3" y="4" width="18" height="16" rx="2"></rect>
-                            <circle cx="9" cy="10" r="2"></circle>
-                            <path d="M15 8h4"></path>
-                            <path d="M15 12h4"></path>
-                            <path d="M5 18c.8-1.5 2.2-2.5 4-2.5s3.2 1 4 2.5"></path>
-                          </svg>
-                        </div>
-                        <div className="item-info">
-                          <span className="item-name-title">{item.title}</span>
-                          <span className="item-sub-title">{item.fields.idSub}</span>
-                        </div>
-                      </div>
-                      <div className="item-card-actions">
-                        <button className="row-action-btn edit" onClick={() => onEditItem(item)} title="Edit Item">
-                          <i className="fa-solid fa-pen"></i>
-                        </button>
-                        <button className="row-action-btn delete" onClick={() => onDeleteItem(item.id)} title="Delete Item">
-                          <i className="fa-solid fa-trash"></i>
-                        </button>
-                        <button className="row-action-btn view" onClick={() => onViewItem(item)} title="View Details">
-                          <i className="fa-solid fa-eye"></i>
-                        </button>
-                        <button className="row-action-btn copy" onClick={(e) => handleCopy(e, item.fields.idNumber, "ID Number")} title="Copy ID">
-                          <i className="fa-solid fa-copy"></i>
-                        </button>
-                      </div>
+                    <div className="item-avatar-circle">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+                        <circle cx="9" cy="10" r="2"></circle>
+                        <path d="M15 8h4"></path>
+                        <path d="M15 12h4"></path>
+                        <path d="M5 18c.8-1.5 2.2-2.5 4-2.5s3.2 1 4 2.5"></path>
+                      </svg>
+                    </div>
+                    <div className="item-info">
+                      <span className="item-name-title">{item.title}</span>
+                      <span className="item-sub-title">{item.fields.idSub}</span>
                     </div>
 
                     <div className="item-secrets">
@@ -842,6 +809,21 @@ const VaultDashboard = ({
                         </span>
                       )}
                       {renderCustomFieldsInline(item)}
+                    </div>
+
+                    <div className="item-card-actions">
+                      <button className="row-action-btn edit" onClick={() => onEditItem(item)} title="Edit Item">
+                        <i className="fa-solid fa-pen"></i>
+                      </button>
+                      <button className="row-action-btn delete" onClick={() => onDeleteItem(item.id)} title="Delete Item">
+                        <i className="fa-solid fa-trash"></i>
+                      </button>
+                      <button className="row-action-btn view" onClick={() => onViewItem(item)} title="View Details">
+                        <i className="fa-solid fa-eye"></i>
+                      </button>
+                      <button className="row-action-btn copy" onClick={(e) => handleCopy(e, item.fields.idNumber, "ID Number")} title="Copy ID">
+                        <i className="fa-solid fa-copy"></i>
+                      </button>
                     </div>
                   </div>
                 );
