@@ -13,7 +13,7 @@ const CATEGORIES_LIST = [
     value: "app",
     label: "App Login",
     desc: "Passwords, PINs, and usernames for mobile or desktop apps",
-    iconClass: "fa-solid fa-mobile-screen-button",
+    iconClass: "fa-solid fa-mobile-alt",
     color: "#06b6d4" // cyan
   },
   {

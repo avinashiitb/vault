@@ -413,7 +413,7 @@ const VaultDashboard = ({
                   >
                     {item.category === "app" ? (
                       <div className="item-avatar font-bold" style={{ backgroundColor: "rgba(6, 182, 212, 0.15)", color: "#06b6d4" }} title="App Login">
-                        <i className="fa-solid fa-mobile-screen-button" style={{ fontSize: "14px" }}></i>
+                        <i className="fa-solid fa-mobile-alt" style={{ fontSize: "14px" }}></i>
                       </div>
                     ) : (
                       <div className="item-avatar font-bold" style={{ backgroundColor: "rgba(59, 130, 246, 0.15)", color: "#3b82f6" }} title="Website Login">
