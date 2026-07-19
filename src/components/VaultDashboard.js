@@ -256,7 +256,7 @@ const VaultDashboard = ({
   });
 
   // Group items by category
-  const websites = filteredItems.filter((i) => i.category === "website");
+  const websites = filteredItems.filter((i) => i.category === "website" || i.category === "app");
   const cards = filteredItems.filter((i) => i.category === "card");
   const banks = filteredItems.filter((i) => i.category === "bank");
   const apikeys = filteredItems.filter((i) => i.category === "apikey");
