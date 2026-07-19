@@ -403,7 +403,7 @@ const VaultDashboard = ({
             </div>
 
             <div className="category-card-list">
-              {websites.slice(0, expandedSections.website ? websites.length : 3).map((item) => {
+              {websites.slice(0, expandedSections.website ? websites.length : 4).map((item) => {
                 const isRevealed = revealedSecrets[item.id]?.password !== undefined;
                 const countdown = revealedCountdowns[`${item.id}_password`] || 0;
                 return (
@@ -464,7 +464,7 @@ const VaultDashboard = ({
                 );
               })}
             </div>
-            {websites.length > 3 && (
+            {websites.length > 4 && (
               <div className="section-expand-container">
                 <button className="section-expand-btn" onClick={() => toggleSection("website")}>
                   {expandedSections.website ? (
@@ -473,7 +473,7 @@ const VaultDashboard = ({
                     </>
                   ) : (
                     <>
-                      <i className="fa-solid fa-ellipsis"></i> Show {websites.length - 3} more
+                      <i className="fa-solid fa-ellipsis"></i> Show {websites.length - 4} more
                     </>
                   )}
                 </button>
@@ -494,7 +494,7 @@ const VaultDashboard = ({
             </div>
 
             <div className="category-card-list">
-              {cards.slice(0, expandedSections.card ? cards.length : 3).map((item) => {
+              {cards.slice(0, expandedSections.card ? cards.length : 4).map((item) => {
                 const isRevealed = revealedSecrets[item.id]?.cardNumber !== undefined;
                 const isVisa = item.title.toLowerCase().includes("visa");
                 const cardTypeLabel = isVisa ? "VISA" : "MC";
@@ -548,7 +548,7 @@ const VaultDashboard = ({
                 );
               })}
             </div>
-            {cards.length > 3 && (
+            {cards.length > 4 && (
               <div className="section-expand-container">
                 <button className="section-expand-btn" onClick={() => toggleSection("card")}>
                   {expandedSections.card ? (
@@ -557,7 +557,7 @@ const VaultDashboard = ({
                     </>
                   ) : (
                     <>
-                      <i className="fa-solid fa-ellipsis"></i> Show {cards.length - 3} more
+                      <i className="fa-solid fa-ellipsis"></i> Show {cards.length - 4} more
                     </>
                   )}
                 </button>
@@ -579,7 +579,7 @@ const VaultDashboard = ({
             </div>
 
             <div className="category-card-list">
-              {banks.slice(0, expandedSections.bank ? banks.length : 3).map((item) => {
+              {banks.slice(0, expandedSections.bank ? banks.length : 4).map((item) => {
                 const isRevealed = revealedSecrets[item.id]?.accountNumber !== undefined;
                 const countdown = revealedCountdowns[`${item.id}_accountNumber`] || 0;
                 return (
@@ -630,7 +630,7 @@ const VaultDashboard = ({
                 );
               })}
             </div>
-            {banks.length > 3 && (
+            {banks.length > 4 && (
               <div className="section-expand-container">
                 <button className="section-expand-btn" onClick={() => toggleSection("bank")}>
                   {expandedSections.bank ? (
@@ -639,7 +639,7 @@ const VaultDashboard = ({
                     </>
                   ) : (
                     <>
-                      <i className="fa-solid fa-ellipsis"></i> Show {banks.length - 3} more
+                      <i className="fa-solid fa-ellipsis"></i> Show {banks.length - 4} more
                     </>
                   )}
                 </button>
@@ -660,7 +660,7 @@ const VaultDashboard = ({
             </div>
 
             <div className="category-card-list">
-              {envs.slice(0, expandedSections.env ? envs.length : 3).map((item) => {
+              {envs.slice(0, expandedSections.env ? envs.length : 4).map((item) => {
                 const count = item.fields.envContent ? item.fields.envContent.split("\n").filter(line => line.trim() && !line.trim().startsWith("#")).length : 0;
                 return (
                   <div key={item.id} className="item-row">
@@ -700,7 +700,7 @@ const VaultDashboard = ({
                 );
               })}
             </div>
-            {envs.length > 3 && (
+            {envs.length > 4 && (
               <div className="section-expand-container">
                 <button className="section-expand-btn" onClick={() => toggleSection("env")}>
                   {expandedSections.env ? (
@@ -709,7 +709,7 @@ const VaultDashboard = ({
                     </>
                   ) : (
                     <>
-                      <i className="fa-solid fa-ellipsis"></i> Show {envs.length - 3} more
+                      <i className="fa-solid fa-ellipsis"></i> Show {envs.length - 4} more
                     </>
                   )}
                 </button>
@@ -729,7 +729,7 @@ const VaultDashboard = ({
             </div>
 
             <div className="category-card-list">
-              {apikeys.slice(0, expandedSections.apikey ? apikeys.length : 3).map((item) => (
+              {apikeys.slice(0, expandedSections.apikey ? apikeys.length : 4).map((item) => (
                 <div key={item.id} className="item-row">
                     <div className="item-avatar-circle">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -765,7 +765,7 @@ const VaultDashboard = ({
                 </div>
               ))}
             </div>
-            {apikeys.length > 3 && (
+            {apikeys.length > 4 && (
               <div className="section-expand-container">
                 <button className="section-expand-btn" onClick={() => toggleSection("apikey")}>
                   {expandedSections.apikey ? (
@@ -774,7 +774,7 @@ const VaultDashboard = ({
                     </>
                   ) : (
                     <>
-                      <i className="fa-solid fa-ellipsis"></i> Show {apikeys.length - 3} more
+                      <i className="fa-solid fa-ellipsis"></i> Show {apikeys.length - 4} more
                     </>
                   )}
                 </button>
@@ -798,7 +798,7 @@ const VaultDashboard = ({
             </div>
 
             <div className="category-card-list">
-              {identities.slice(0, expandedSections.identity ? identities.length : 3).map((item) => {
+              {identities.slice(0, expandedSections.identity ? identities.length : 4).map((item) => {
                 const isRevealed = revealedSecrets[item.id]?.idNumber !== undefined;
                 const countdown = revealedCountdowns[`${item.id}_idNumber`] || 0;
                 return (
@@ -847,7 +847,7 @@ const VaultDashboard = ({
                 );
               })}
             </div>
-            {identities.length > 3 && (
+            {identities.length > 4 && (
               <div className="section-expand-container">
                 <button className="section-expand-btn" onClick={() => toggleSection("identity")}>
                   {expandedSections.identity ? (
@@ -856,7 +856,7 @@ const VaultDashboard = ({
                     </>
                   ) : (
                     <>
-                      <i className="fa-solid fa-ellipsis"></i> Show {identities.length - 3} more
+                      <i className="fa-solid fa-ellipsis"></i> Show {identities.length - 4} more
                     </>
                   )}
                 </button>
