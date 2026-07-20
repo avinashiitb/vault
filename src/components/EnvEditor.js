@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Editor from "@monaco-editor/react";
 import "./EnvEditor.css";
+import { copyToClipboard } from "../utils/clipboard";
 
 const EnvEditor = ({ mode, item, theme, onSave, onClose }) => {
   const [editorMode, setEditorMode] = useState(mode); // "add", "edit", "view"
@@ -60,10 +61,12 @@ const EnvEditor = ({ mode, item, theme, onSave, onClose }) => {
     return () => clearTimeout(delayDebounceFn);
   }, [title, content, isView, currentItemId]);
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(content);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleCopy = async () => {
+    const success = await copyToClipboard(content);
+    if (success) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
   return (

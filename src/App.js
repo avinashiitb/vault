@@ -7,6 +7,7 @@ import EnvEditor from "./components/EnvEditor";
 import CategorySelectorModal from "./components/CategorySelectorModal";
 import Toast from "./components/Toast";
 import { encryptText, decryptText, hashMasterPassword } from "./utils/crypto";
+import { copyToClipboard } from "./utils/clipboard";
 
 // Unique ID Generator
 const uid = () => Math.random().toString(36).slice(2, 9) + Math.random().toString(36).slice(2, 9);
@@ -100,12 +101,16 @@ function App() {
   };
 
   // Copy text helper
-  const handleCopyText = (text, fieldName) => {
+  const handleCopyText = async (text, fieldName) => {
     if (!text) return;
-    navigator.clipboard.writeText(text);
-    showToast(`Copied ${fieldName} to clipboard!`, "success");
-    // Also notify via DevScribe toast if available
-    window.pluginAPI?.notify?.(`Copied ${fieldName} to clipboard!`, "success");
+    const success = await copyToClipboard(text);
+    if (success) {
+      showToast(`Copied ${fieldName} to clipboard!`, "success");
+      // Also notify via DevScribe toast if available
+      window.pluginAPI?.notify?.(`Copied ${fieldName} to clipboard!`, "success");
+    } else {
+      showToast(`Failed to copy ${fieldName}`, "error");
+    }
   };
 
   // Revealed Secrets Management

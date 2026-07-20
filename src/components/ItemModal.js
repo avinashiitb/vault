@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "./ItemModal.css";
+import { copyToClipboard } from "../utils/clipboard";
 
 const CATEGORIES = [
   { value: "website", label: "Website" },
@@ -14,10 +15,12 @@ const ViewFieldRow = ({ label, value, isSecret }) => {
   const [revealed, setRevealed] = useState(!isSecret);
   const [copied, setCopied] = useState(false);
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(value || "");
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleCopy = async () => {
+    const success = await copyToClipboard(value || "");
+    if (success) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
   if (!value && !isSecret) return null; // Don't render empty optional fields
@@ -335,10 +338,12 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
                     <button
                       type="button"
                       className="action-icon-btn"
-                      onClick={() => {
-                        navigator.clipboard.writeText(envContent || "");
-                        setCopiedEnv(true);
-                        setTimeout(() => setCopiedEnv(false), 2000);
+                      onClick={async () => {
+                        const success = await copyToClipboard(envContent || "");
+                        if (success) {
+                          setCopiedEnv(true);
+                          setTimeout(() => setCopiedEnv(false), 2000);
+                        }
                       }}
                       style={{
                         padding: "4px 8px",
