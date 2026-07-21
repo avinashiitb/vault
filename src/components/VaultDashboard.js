@@ -150,9 +150,9 @@ const VaultDashboard = ({
     }
 
     // 2. Default masked with preview fallback
-    if (secretType === "password" || secretType === "cardCvv" || secretType === "upiPin" || secretType === "cardPin" || secretType === "websitePin") {
+    if (secretType === "password" || secretType === "cardCvv" || secretType === "cardPin" || secretType === "websitePin") {
       if (secretType === "cardCvv") return "•••";
-      if (secretType === "upiPin" || secretType === "cardPin" || secretType === "websitePin") return "PIN ••••";
+      if (secretType === "cardPin" || secretType === "websitePin") return "PIN ••••";
       return "••••••••••••";
     }
 
@@ -608,9 +608,6 @@ const VaultDashboard = ({
                       </span>
                       <span className="secret-pill font-mono">
                         {renderSecret(item.id, "ifscCode", item.fields.ifscCode)}
-                      </span>
-                      <span className="secret-pill font-mono">
-                        {renderSecret(item.id, "upiPin", item.fields.upiPin)}
                       </span>
                       {isRevealed && (
                         <span className="reveal-countdown-timer">

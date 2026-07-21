@@ -133,7 +133,6 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
   const [customerId, setCustomerId] = useState(item?.fields?.customerId || "");
   const [accountNumber, setAccountNumber] = useState(item?.fields?.accountNumber || "");
   const [ifscCode, setIfscCode] = useState(item?.fields?.ifscCode || "");
-  const [upiPin, setUpiPin] = useState(item?.fields?.upiPin || "");
 
   const [keyScope, setKeyScope] = useState(item?.fields?.keyScope || "");
   const [apiKeyValue, setApiKeyValue] = useState(item?.fields?.apiKeyValue || "");
@@ -218,7 +217,7 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
     } else if (category === "card") {
       fields = { cardholder, cardNumber, cardExpiry, cardCvv, cardPin };
     } else if (category === "bank") {
-      fields = { accountHolder, accountNumber, ifscCode, upiPin, customerId };
+      fields = { accountHolder, accountNumber, ifscCode, customerId };
     } else if (category === "apikey") {
       fields = { keyScope, apiKeyValue };
     } else if (category === "identity") {
@@ -304,13 +303,12 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
               {/* BANK VIEW */}
               {category === "bank" && (
                 <>
-                  <ViewFieldRow label="Account Holder" value={accountHolder} />
-                  <ViewFieldRow label="Customer ID" value={customerId} isSecret={true} />
-                  <ViewFieldRow label="Account Number" value={accountNumber} isSecret={true} />
                   <div style={{ display: "flex", gap: "12px" }}>
-                    <div style={{ flex: 1 }}><ViewFieldRow label="IFSC Code" value={ifscCode} /></div>
-                    <div style={{ flex: 1 }}><ViewFieldRow label="PIN" value={upiPin} isSecret={true} /></div>
+                    <div style={{ flex: 1 }}><ViewFieldRow label="Account Holder" value={accountHolder} /></div>
+                    <div style={{ flex: 1 }}><ViewFieldRow label="Customer ID" value={customerId} isSecret={true} /></div>
                   </div>
+                  <ViewFieldRow label="Account Number" value={accountNumber} isSecret={true} />
+                  <ViewFieldRow label="IFSC Code" value={ifscCode} />
                 </>
               )}
 
@@ -588,23 +586,25 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
               {/* BANK FIELDS */}
               {category === "bank" && (
                 <div className="category-fields">
-                  <div className="form-group">
-                    <label>Account Holder</label>
-                    <input
-                      type="text"
-                      placeholder="e.g. John Doe"
-                      value={accountHolder}
-                      onChange={(e) => setAccountHolder(e.target.value)}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Customer ID</label>
-                    <input
-                      type="text"
-                      placeholder="e.g. 12345678"
-                      value={customerId}
-                      onChange={(e) => setCustomerId(e.target.value)}
-                    />
+                  <div className="form-row">
+                    <div className="form-group flex-1">
+                      <label>Account Holder</label>
+                      <input
+                        type="text"
+                        placeholder="e.g. John Doe"
+                        value={accountHolder}
+                        onChange={(e) => setAccountHolder(e.target.value)}
+                      />
+                    </div>
+                    <div className="form-group flex-1">
+                      <label>Customer ID</label>
+                      <input
+                        type="text"
+                        placeholder="e.g. 12345678"
+                        value={customerId}
+                        onChange={(e) => setCustomerId(e.target.value)}
+                      />
+                    </div>
                   </div>
                   <div className="form-group">
                     <label>Account Number</label>
@@ -615,25 +615,14 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
                       onChange={(e) => setAccountNumber(e.target.value)}
                     />
                   </div>
-                  <div className="form-row">
-                    <div className="form-group flex-1">
-                      <label>IFSC Code</label>
-                      <input
-                        type="text"
-                        placeholder="HDFC000••••"
-                        value={ifscCode}
-                        onChange={(e) => setIfscCode(e.target.value)}
-                      />
-                    </div>
-                    <div className="form-group flex-1">
-                      <label>PIN</label>
-                      <input
-                        type="text"
-                        placeholder="••••"
-                        value={upiPin}
-                        onChange={(e) => setUpiPin(e.target.value)}
-                      />
-                    </div>
+                  <div className="form-group">
+                    <label>IFSC Code</label>
+                    <input
+                      type="text"
+                      placeholder="HDFC000••••"
+                      value={ifscCode}
+                      onChange={(e) => setIfscCode(e.target.value)}
+                    />
                   </div>
                 </div>
               )}
