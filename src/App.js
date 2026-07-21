@@ -327,12 +327,14 @@ function App() {
               category: "bank",
               title: "HDFC Savings Account",
               fields: {
-                bankSub: "Savings Account",
+                accountHolder: "AVINASH KUMAR ANSHU",
                 accountNumber: await encryptText("50100412346641", password),
                 accountNumberPreview: "6641",
                 ifscCode: await encryptText("HDFC0000240", password),
                 ifscCodePreview: "HDFC••••",
-                upiPin: await encryptText("4821", password)
+                upiPin: await encryptText("4821", password),
+                customerId: await encryptText("10293847", password),
+                customerIdPreview: "••••847"
               }
             },
             {
@@ -407,6 +409,15 @@ function App() {
               } catch (e) {}
             }
             previewsMap[item.id].ifscCodePreview = pIfsc || "HDFC000••••";
+
+            let pCust = item.fields.customerIdPreview;
+            if (!pCust && item.fields.customerId) {
+              try {
+                const plain = await decryptText(item.fields.customerId, password);
+                pCust = plain.length > 4 ? "••••" + plain.slice(-4) : "••••";
+              } catch (e) {}
+            }
+            previewsMap[item.id].customerIdPreview = pCust || "••••";
           } else if (item.category === "apikey") {
             let pKey = item.fields.apiKeyValuePreview;
             if (!pKey && item.fields.apiKeyValue) {
@@ -457,7 +468,7 @@ function App() {
       website: ["password"],
       app: ["password"],
       card: ["cardNumber", "cardExpiry", "cardCvv", "cardPin"],
-      bank: ["accountNumber", "ifscCode", "upiPin"],
+      bank: ["accountNumber", "ifscCode", "upiPin", "customerId"],
       apikey: ["apiKeyValue"],
       identity: ["idNumber"],
       env: ["envContent"],
@@ -535,7 +546,7 @@ function App() {
       website: ["password"],
       app: ["password"],
       card: ["cardNumber", "cardExpiry", "cardCvv", "cardPin"],
-      bank: ["accountNumber", "ifscCode", "upiPin"],
+      bank: ["accountNumber", "ifscCode", "upiPin", "customerId"],
       apikey: ["apiKeyValue"],
       identity: ["idNumber"],
       env: ["envContent"],
@@ -617,7 +628,7 @@ function App() {
       website: ["password"],
       app: ["password"],
       card: ["cardNumber", "cardExpiry", "cardCvv", "cardPin"],
-      bank: ["accountNumber", "ifscCode", "upiPin"],
+      bank: ["accountNumber", "ifscCode", "upiPin", "customerId"],
       apikey: ["apiKeyValue"],
       identity: ["idNumber"],
       env: ["envContent"],
@@ -678,6 +689,10 @@ function App() {
       const pIfsc = modalData.fields.ifscCode ? modalData.fields.ifscCode.slice(0, 4) + "••••" : "";
       encryptedFields.ifscCodePreview = pIfsc;
       itemPreviews.ifscCodePreview = pIfsc;
+
+      const pCust = modalData.fields.customerId ? "••••" + modalData.fields.customerId.slice(-4) : "";
+      encryptedFields.customerIdPreview = pCust;
+      itemPreviews.customerIdPreview = pCust;
     } else if (modalData.category === "apikey") {
       const pKey = modalData.fields.apiKeyValue ? modalData.fields.apiKeyValue.substring(0, 8) + "••••" : "";
       encryptedFields.apiKeyValuePreview = pKey;

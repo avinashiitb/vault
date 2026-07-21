@@ -1,7 +1,7 @@
 {
   "id": "vault",
   "name": "Vault",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "A beautiful and secure vault plugin for storing credentials, cards, bank accounts, and secrets.",
   "fileType": "vault",
   "route": "/vault/:file_id",

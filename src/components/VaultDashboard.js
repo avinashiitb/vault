@@ -162,6 +162,7 @@ const VaultDashboard = ({
       if (secretType === "cardExpiry") return `Exp ${preview}`;
       if (secretType === "accountNumber") return `A/c ······${preview}`;
       if (secretType === "ifscCode") return `IFSC ${preview}`;
+      if (secretType === "customerId") return `Cust ID ${preview}`;
       if (secretType === "apiKeyValue") return `${preview}`;
       if (secretType === "idNumber") return `${preview}`;
       if (secretType === "envContent") return `env ${preview}`;
@@ -172,6 +173,7 @@ const VaultDashboard = ({
     if (secretType === "cardExpiry") return "Exp 09/27";
     if (secretType === "accountNumber") return "A/c ······6641";
     if (secretType === "ifscCode") return "IFSC HDFC000••••";
+    if (secretType === "customerId") return "Cust ID ••••••••";
     if (secretType === "apiKeyValue") return "ghp_••••••••••••";
     if (secretType === "idNumber") return "Z••••••93";
     if (secretType === "envContent") return "env ••••••••";
@@ -584,18 +586,23 @@ const VaultDashboard = ({
                 const countdown = revealedCountdowns[`${item.id}_accountNumber`] || 0;
                 return (
                   <div key={item.id} className="item-row">
-                        <div className="item-avatar-circle">
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M3 21h18"></path>
-                            <path d="M5 21V7l7-4 7 4v14"></path>
-                          </svg>
-                        </div>
-                        <div className="item-info">
-                          <span className="item-name-title">{item.title}</span>
-                          <span className="item-sub-title">{item.fields.bankSub}</span>
-                        </div>
+                    <div className="item-avatar-circle">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M3 21h18"></path>
+                        <path d="M5 21V7l7-4 7 4v14"></path>
+                      </svg>
+                    </div>
+                    <div className="item-info">
+                      <span className="item-name-title">{item.title}</span>
+                      <span className="item-sub-title">{item.fields.accountHolder || item.fields.bankSub}</span>
+                    </div>
 
                     <div className="item-secrets flex-row-fields">
+                      {item.fields.customerId && (
+                        <span className="secret-pill font-mono">
+                          {renderSecret(item.id, "customerId", item.fields.customerId)}
+                        </span>
+                      )}
                       <span className="secret-pill font-mono">
                         {renderSecret(item.id, "accountNumber", item.fields.accountNumber)}
                       </span>

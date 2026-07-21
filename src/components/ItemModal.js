@@ -129,7 +129,8 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
   const [cardCvv, setCardCvv] = useState(item?.fields?.cardCvv || "");
   const [cardPin, setCardPin] = useState(item?.fields?.cardPin || "");
 
-  const [bankSub, setBankSub] = useState(item?.fields?.bankSub || "");
+  const [accountHolder, setAccountHolder] = useState(item?.fields?.accountHolder || item?.fields?.bankSub || "");
+  const [customerId, setCustomerId] = useState(item?.fields?.customerId || "");
   const [accountNumber, setAccountNumber] = useState(item?.fields?.accountNumber || "");
   const [ifscCode, setIfscCode] = useState(item?.fields?.ifscCode || "");
   const [upiPin, setUpiPin] = useState(item?.fields?.upiPin || "");
@@ -217,7 +218,7 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
     } else if (category === "card") {
       fields = { cardholder, cardNumber, cardExpiry, cardCvv, cardPin };
     } else if (category === "bank") {
-      fields = { bankSub, accountNumber, ifscCode, upiPin };
+      fields = { accountHolder, accountNumber, ifscCode, upiPin, customerId };
     } else if (category === "apikey") {
       fields = { keyScope, apiKeyValue };
     } else if (category === "identity") {
@@ -303,7 +304,8 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
               {/* BANK VIEW */}
               {category === "bank" && (
                 <>
-                  <ViewFieldRow label="Sub Description" value={bankSub} />
+                  <ViewFieldRow label="Account Holder" value={accountHolder} />
+                  <ViewFieldRow label="Customer ID" value={customerId} isSecret={true} />
                   <ViewFieldRow label="Account Number" value={accountNumber} isSecret={true} />
                   <div style={{ display: "flex", gap: "12px" }}>
                     <div style={{ flex: 1 }}><ViewFieldRow label="IFSC Code" value={ifscCode} /></div>
@@ -587,12 +589,21 @@ const ItemModal = ({ mode, item, onSave, onClose }) => {
               {category === "bank" && (
                 <div className="category-fields">
                   <div className="form-group">
-                    <label>Sub Description (e.g. Primary Account)</label>
+                    <label>Account Holder</label>
                     <input
                       type="text"
-                      placeholder="Primary account"
-                      value={bankSub}
-                      onChange={(e) => setBankSub(e.target.value)}
+                      placeholder="e.g. John Doe"
+                      value={accountHolder}
+                      onChange={(e) => setAccountHolder(e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Customer ID</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. 12345678"
+                      value={customerId}
+                      onChange={(e) => setCustomerId(e.target.value)}
                     />
                   </div>
                   <div className="form-group">
